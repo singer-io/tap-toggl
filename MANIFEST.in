@@ -1,0 +1,3 @@
+include LICENSE
+include tap_clubspeed/schemas/*.json
+include tap_clubspeed/schemas/shared/*.json
