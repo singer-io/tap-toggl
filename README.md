@@ -20,12 +20,14 @@ $ pip3 install tap-toggl
 
 ### Create config file
 
-This config is to authenticate into toggl.
+This config is to authenticate into toggl. You can request an API token in your settings on the Toggl website.
+
+The `detailed_report_trailing_days` determines the window of how many trailing days to pull the `time_entries` resource.
 
 ```
 {
-  "subdomain": "your_subdomain",
-  "private_key": "********"
+  "api_token": "*****",
+  "detailed_report_trailing_days": 1
 }
 ```
 
@@ -37,15 +39,15 @@ This command returns a JSON that describes the schema of each table.
 $ tap-toggl --config config.json --discover
 ```
 
-### Field selection
-
-You can tell the tap to extract specific fields by using a `catalog.json` file.
+To save this to `catalog.json`:
 
 ```
 $ tap-toggl --config config.json --discover > catalog.json
 ```
 
-Then, edit `catalog.json` to make selections. Note the top-level `selected` attribute, as well as the `selected` attribute nested under each property.
+### Field selection
+
+You can tell the tap to extract specific fields by editing `catalog.json` to make selections. Note the top-level `selected` attribute, as well as the `selected` attribute nested under each property.
 
 ```
 {
@@ -100,9 +102,29 @@ Messages are written to standard output following the Singer specification. The 
 
 Incremental replication works in conjunction with a state file to only extract new records each time the tap is invoked.
 
-
 ## Tests
 
 ```
 $ make test
 ```
+
+## License (MIT)
+
+```
+WWWWWW||WWWWWW
+ W W W||W W W
+      ||
+    ( OO )__________
+     /  |           \
+    /o o|    MIT     \
+    \___/||_||__||_|| *
+         || ||  || ||
+        _||_|| _||_||
+       (__|__|(__|__|
+```
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
