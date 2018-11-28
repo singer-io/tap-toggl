@@ -16,7 +16,7 @@ class Toggl(object):
 
   def __init__(self, api_token=None, start_date=None, user_agent=None, trailing_days=1):
     self.api_token = api_token
-    self.trailing_days = trailing_days
+    self.trailing_days = int(trailing_days)
     self.workspace_ids = []
     self.user_agent = user_agent
 
@@ -55,7 +55,7 @@ class Toggl(object):
     return self._get('https://www.toggl.com/api/v8/me')
 
 
-  def workspaces(self, column_name=None, bookmark=None):
+  def a_workspaces(self, column_name=None, bookmark=None):
     res = self._get('https://www.toggl.com/api/v8/workspaces')
     self.workspace_ids = []
     for item in res:

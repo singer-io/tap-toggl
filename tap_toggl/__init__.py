@@ -14,7 +14,7 @@ from tap_toggl.sync import sync_stream
 from tap_toggl.streams import STREAMS
 
 
-LOGGER = singer.get_logger()
+logger = singer.get_logger()
 
 
 REQUIRED_CONFIG_KEYS = [
@@ -26,10 +26,10 @@ REQUIRED_CONFIG_KEYS = [
 
 
 def do_discover(client):
-    LOGGER.info("Starting discover")
+    logger.info("Starting discover")
     catalog = {"streams": discover_streams(client)}
     json.dump(catalog, sys.stdout, indent=2)
-    LOGGER.info("Finished discover")
+    logger.info("Finished discover")
 
 
 def stream_is_selected(mdata):
@@ -66,30 +66,30 @@ def do_sync(client, catalog, state):
         mdata = metadata.to_map(stream.metadata)
 
         if stream_name not in selected_stream_names:
-            LOGGER.info("%s: Skipping - not selected", stream_name)
+            logger.info("%s: Skipping - not selected", stream_name)
             continue
 
         key_properties = metadata.get(mdata, (), 'table-key-properties')
         singer.write_schema(stream_name, stream.schema.to_dict(), key_properties)
-        LOGGER.info("%s: Starting sync", stream_name)
+        logger.info("%s: Starting sync", stream_name)
         instance = STREAMS[stream_name](client)
         instance.stream = stream
         counter_value = sync_stream(state, instance)
         singer.write_state(state)
-        LOGGER.info("%s: Completed sync (%s rows)", stream_name, counter_value)
+        logger.info("%s: Completed sync (%s rows)", stream_name, counter_value)
 
     singer.write_state(state)
-    LOGGER.info("Finished sync")
+    logger.info("Finished sync")
 
 
-@singer.utils.handle_top_exception(LOGGER)
+@singer.utils.handle_top_exception(logger)
 def main():
     parsed_args = singer.utils.parse_args(REQUIRED_CONFIG_KEYS)
 
     creds = {
         "api_token": parsed_args.config['api_token'],
-        "trailing_days": parsed_args.config['detailed_report_trailing_days']
-        "user_agent": parsed_args.config['user_agent']
+        "trailing_days": parsed_args.config['detailed_report_trailing_days'],
+        "user_agent": parsed_args.config['user_agent'],
         "start_date": parsed_args.config['start_date']
     }
     client = Toggl(**creds)

@@ -116,7 +116,7 @@ class Stream():
 
 
 class Workspaces(Stream):
-    name = "workspaces"
+    name = "a_workspaces"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
@@ -179,7 +179,7 @@ class TimeEntries(Stream):
 
 
 STREAMS = {
-    "workspaces": Workspaces,
+    "a_workspaces": Workspaces,
     "clients": Clients,
     "groups": Groups,
     "projects": Projects,

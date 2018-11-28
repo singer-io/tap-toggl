@@ -9,7 +9,7 @@ import singer.metrics as metrics
 from singer import metadata
 from singer import Transformer
 
-LOGGER = singer.get_logger()
+logger = singer.get_logger()
 
 
 def sync_stream(state, instance):
@@ -27,7 +27,7 @@ def sync_stream(state, instance):
                     singer.write_state(state)
 
             except Exception as e:
-                LOGGER.error('Handled exception: {error}'.format(error=str(e)))
+                logger.error('Handled exception: {error}'.format(error=str(e)))
                 continue
 
         return counter.value
