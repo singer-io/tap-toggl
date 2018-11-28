@@ -14,11 +14,11 @@ logger = logging.getLogger()
 """ Simple wrapper for Toggl. """
 class Toggl(object):
 
-  def __init__(self, api_token=None, trailing_days=1):
+  def __init__(self, api_token=None, start_date=None, user_agent=None, trailing_days=1):
     self.api_token = api_token
     self.trailing_days = trailing_days
     self.workspace_ids = []
-    self.user_agent = 'stitch-tap'
+    self.user_agent = user_agent
 
 
   def _get_workspace_endpoints(self, endpoint):

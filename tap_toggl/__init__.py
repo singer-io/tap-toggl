@@ -18,7 +18,10 @@ LOGGER = singer.get_logger()
 
 
 REQUIRED_CONFIG_KEYS = [
-    "api_token"
+    "api_token",
+    "start_date",
+    "user_agent",
+    "detailed_report_trailing_days"
 ]
 
 
@@ -86,6 +89,8 @@ def main():
     creds = {
         "api_token": parsed_args.config['api_token'],
         "trailing_days": parsed_args.config['detailed_report_trailing_days']
+        "user_agent": parsed_args.config['user_agent']
+        "start_date": parsed_args.config['start_date']
     }
     client = Toggl(**creds)
 
