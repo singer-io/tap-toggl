@@ -56,7 +56,7 @@ class Stream():
         current_bookmark = self.get_bookmark(state)
         if current_bookmark is None:
             return True
-        return utils.strptime_with_tz(value) >= utils.strptime_with_tz(current_bookmark)
+        return utils.strptime_with_tz(value) > utils.strptime_with_tz(current_bookmark)
 
 
     def load_schema(self):
