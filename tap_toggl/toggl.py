@@ -37,6 +37,7 @@ class Toggl(object):
 
   def _get_response(self, url, column_name=None, bookmark=None, key=None):
     res = self._get(url)
+    res = [] if res is None else res
     res = res[key] if key is not None else res
     length = len(res)
     logger.info('Endpoint returned {length} rows.'.format(length=length))
