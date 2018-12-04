@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='tap-toggl',
-      version='0.0.1',
+      version='0.0.2',
       description='Singer.io tap for extracting data from the Toggl API',
       author='lambtron',
       author_email="andyjiang@gmail.com",
@@ -19,5 +19,8 @@ setup(name='tap-toggl',
           tap-toggl=tap_toggl:main
       ''',
       packages=['tap_toggl'],
+      package_data = {
+          "schemas": ["tap_toggl/schemas/*.json"]
+      },
       include_package_data=True,
 )
