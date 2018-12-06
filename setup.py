@@ -5,9 +5,8 @@ from setuptools import setup
 setup(name='tap-toggl',
       version='0.0.2',
       description='Singer.io tap for extracting data from the Toggl API',
-      author='lambtron',
-      author_email="andyjiang@gmail.com",
-      url='https://andyjiang.com',
+      author='Stitch',
+      url='http://github.com/singer-io/tap-toggl',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_toggl'],
       install_requires=[
