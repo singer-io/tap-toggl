@@ -100,7 +100,22 @@ Messages are written to standard output following the Singer specification. The 
 
 ### Incremental
 
-Incremental replication works in conjunction with a state file to only extract new records each time the tap is invoked.
+The streams that are incremental are:
+
+- workspaces
+- clients
+- groups
+- projects
+- tasks
+- users
+- workspace users
+- time entries*
+
+Time entries uses a lookback window set by the config's "detailed_report_trailing_days" to pull data, then uses replication key `updated` as the bookmark.
+
+### Full Table
+
+The only stream that is full table is `tags`.
 
 ## Tests
 
