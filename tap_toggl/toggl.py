@@ -5,6 +5,7 @@
 
 from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta
+import backoff
 import requests
 import logging
 
@@ -28,6 +29,7 @@ class Toggl(object):
     return endpoints
 
 
+  @backoff.on_exception(backoff.expo, requests.exceptions.RequestException)
   def _get(self, url, **kwargs):
     logger.info("Hitting {url}".format(url=url))
     response = requests.get(url, auth=HTTPBasicAuth(self.api_token, 'api_token'))
