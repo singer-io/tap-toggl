@@ -93,7 +93,7 @@ class Stream():
     def sync(self, state):
         get_data = getattr(self.client, self.name)
         bookmark = self.get_bookmark(state)
-        res = get_data(self.replication_key)
+        res = get_data(self.replication_key, bookmark)
 
         if self.replication_method == "INCREMENTAL":
             for item in res:
