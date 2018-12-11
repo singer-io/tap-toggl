@@ -38,10 +38,22 @@ class Stream():
     replication_key = None
     stream = None
     key_properties = KEY_PROPERTIES
+    session_bookmark = None
 
 
     def __init__(self, client=None):
         self.client = client
+
+
+    def is_session_bookmark_old(self, value):
+        if self.session_bookmark is None:
+            return True
+        return utils.strptime_with_tz(value) > utils.strptime_with_tz(self.session_bookmark)
+
+
+    def update_session_bookmark_if_old(self, value):
+        if self.is_session_bookmark_old(value):
+            self.session_bookmark = value
 
 
     def get_bookmark(self, state):
@@ -99,7 +111,9 @@ class Stream():
             for item in res:
                 try:
                     if self.is_bookmark_old(state, item[self.replication_key]):
-                        self.update_bookmark(state, item[self.replication_key])
+                        # must update bookmark when the entire stream is consumed.
+                        # instead, we use a temporary `session_bookmark`.
+                        self.update_session_bookmark_if_old(item[self.replication_key])
                         yield (self.stream, item)
 
                 except Exception as e:
@@ -113,7 +127,9 @@ class Stream():
         else:
             raise Exception('Replication key not defined for {stream}'.format(self.name))
 
-
+        # After the sync, then set the bookmark based off session_bookmark.
+        self.update_bookmark(state, self.session_bookmark)
+        
 
 class Workspaces(Stream):
     name = "a_workspaces"
