@@ -60,14 +60,17 @@ class Stream():
         return singer.get_bookmark(state, self.name, self.replication_key)
 
 
-    def update_bookmark(self, state, value):
-        singer.write_bookmark(state, self.name, self.replication_key, value)
+    def update_bookmark_if_old(self, state, value):
+        if self.is_bookmark_old(state, value):
+            singer.write_bookmark(state, self.name, self.replication_key, value)
 
 
     def is_bookmark_old(self, state, value):
         current_bookmark = self.get_bookmark(state)
         if current_bookmark is None:
             return True
+        if value is None:
+            return False
         return utils.strptime_with_tz(value) > utils.strptime_with_tz(current_bookmark)
 
 
@@ -128,7 +131,7 @@ class Stream():
             raise Exception('Replication key not defined for {stream}'.format(self.name))
 
         # After the sync, then set the bookmark based off session_bookmark.
-        self.update_bookmark(state, self.session_bookmark)
+        self.update_bookmark_if_old(state, self.session_bookmark)
         
 
 class Workspaces(Stream):
