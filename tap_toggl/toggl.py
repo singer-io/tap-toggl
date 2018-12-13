@@ -38,6 +38,7 @@ class Toggl(object):
     endpoints = []
     for workspace_id in self.workspace_ids:
       endpoints.append(endpoint.format(workspace_id=workspace_id))
+      break
     return endpoints
 
 
@@ -149,6 +150,9 @@ class Toggl(object):
     end_date = datetime.today().strftime(fmt)
     start_date = (datetime.today() - timedelta(days=self.trailing_days)).strftime(fmt)
 
+    print('bookmark')
+    print(bookmark)
+
     try:
       start_date = utils.strptime_with_tz(bookmark).strftime(fmt)
     except (AttributeError, OverflowError, ValueError, TypeError):
@@ -160,7 +164,7 @@ class Toggl(object):
     endpoints = []
     moving_start_date = utils.strptime_with_tz(start_date)
     moving_end_date = moving_start_date + timedelta(days=30)
-    while moving_end_date < utils.strptime_with_tz(end_date):
+    while moving_start_date <= utils.strptime_with_tz(end_date):
       new_endpoints = self._get_workspace_endpoints('https://toggl.com/reports/api/v2/details?workspace_id={{workspace_id}}&since={start_date}&until={end_date}&user_agent={user_agent}'.format(start_date=moving_start_date.strftime(fmt), end_date=moving_end_date.strftime(fmt), user_agent=self.user_agent))
       endpoints.extend(new_endpoints)
       moving_start_date += timedelta(days=30)
