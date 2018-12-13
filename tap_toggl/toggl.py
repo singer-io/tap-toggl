@@ -27,7 +27,11 @@ class Toggl(object):
 
 
   def request_too_large(error):
-    return error.response.status_code == 503
+    logger.warning('Request {type} exception caught:  {error}'.format(type=error.__class__.__name__, error=error))
+    if isinstance(error, requests.exceptions.HTTPError):
+      if error.response.status_code == 503:
+        return True
+    return False
 
 
   def _get_workspace_endpoints(self, endpoint):
