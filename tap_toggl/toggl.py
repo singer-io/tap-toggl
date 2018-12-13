@@ -149,9 +149,6 @@ class Toggl(object):
     end_date = datetime.today().strftime(fmt)
     start_date = (datetime.today() - timedelta(days=self.trailing_days)).strftime(fmt)
 
-    print('bookmark')
-    print(bookmark)
-
     try:
       start_date = utils.strptime_with_tz(bookmark).strftime(fmt)
     except (AttributeError, OverflowError, ValueError, TypeError):
