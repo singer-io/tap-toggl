@@ -38,7 +38,6 @@ class Toggl(object):
     endpoints = []
     for workspace_id in self.workspace_ids:
       endpoints.append(endpoint.format(workspace_id=workspace_id))
-      break
     return endpoints
 
 
