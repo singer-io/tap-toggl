@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='tap-toggl',
-      version='0.0.4',
+      version='0.0.5',
       description='Singer.io tap for extracting data from the Toggl API',
       author='Stitch',
       url='http://github.com/singer-io/tap-toggl',

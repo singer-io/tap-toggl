@@ -27,7 +27,11 @@ class Toggl(object):
 
 
   def request_too_large(error):
-    return error.response.status_code == 503
+    logger.warning('Request {type} exception caught:  {error}'.format(type=error.__class__.__name__, error=error))
+    if isinstance(error, requests.exceptions.HTTPError):
+      if error.response.status_code == 503:
+        return True
+    return False
 
 
   def _get_workspace_endpoints(self, endpoint):
@@ -156,7 +160,7 @@ class Toggl(object):
     endpoints = []
     moving_start_date = utils.strptime_with_tz(start_date)
     moving_end_date = moving_start_date + timedelta(days=30)
-    while moving_end_date < utils.strptime_with_tz(end_date):
+    while moving_start_date <= utils.strptime_with_tz(end_date):
       new_endpoints = self._get_workspace_endpoints('https://toggl.com/reports/api/v2/details?workspace_id={{workspace_id}}&since={start_date}&until={end_date}&user_agent={user_agent}'.format(start_date=moving_start_date.strftime(fmt), end_date=moving_end_date.strftime(fmt), user_agent=self.user_agent))
       endpoints.extend(new_endpoints)
       moving_start_date += timedelta(days=30)
