@@ -147,10 +147,10 @@ class Toggl(object):
   def time_entries(self, column_name=None, bookmark=None):
     fmt = '%Y-%m-%d'
     end_date = datetime.today().strftime(fmt)
-    start_date = (datetime.today() - timedelta(days=self.trailing_days)).strftime(fmt)
-
+    
     try:
-      start_date = utils.strptime_with_tz(bookmark).strftime(fmt)
+      start_date = (utils.strptime_with_tz(bookmark) - timedelta(days=self.trailing_days)).strftime(fmt)
+ 
     except (AttributeError, OverflowError, ValueError, TypeError):
       if bookmark is None:
         start_date = utils.strptime_with_tz(self.start_date).strftime(fmt)
