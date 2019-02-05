@@ -135,55 +135,55 @@ class Stream():
         
 
 class Workspaces(Stream):
-    name = "a_workspaces"
+    name = "workspaces"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Clients(Stream):
-    name = "clients"
+    name = "workspaces_clients"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Groups(Stream):
-    name = "groups"
+    name = "workspaces_groups"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Projects(Stream):
-    name = "projects"
+    name = "workspaces_projects"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Tasks(Stream):
-    name = "tasks"
+    name = "workspaces_tasks"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Tags(Stream):
-    name = "tags"
+    name = "workspaces_tags"
     replication_method = "FULL_TABLE"
     key_properties = [ "id" ]
 
 
 class Users(Stream):
-    name = "users"
+    name = "workspaces_users"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class WorkspaceUsers(Stream):
-    name = "workspace_users"
+    name = "workspaces_workspace_users"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
@@ -198,14 +198,14 @@ class TimeEntries(Stream):
 
 
 STREAMS = {
-    "a_workspaces": Workspaces,
-    "clients": Clients,
-    "groups": Groups,
-    "projects": Projects,
-    "tasks": Tasks,
-    "tags": Tags,
-    "users": Users,
-    "workspace_users": WorkspaceUsers,
+    "workspaces": Workspaces,
+    "workspaces_clients": Clients,
+    "workspaces_groups": Groups,
+    "workspaces_projects": Projects,
+    "workspaces_tasks": Tasks,
+    "workspaces_tags": Tags,
+    "workspaces_users": Users,
+    "workspaces_workspace_users": WorkspaceUsers,
     "time_entries": TimeEntries
 }
 
