@@ -105,19 +105,19 @@ Messages are written to standard output following the Singer specification. The 
 The streams that are incremental are:
 
 - workspaces
-- workspaces_clients
-- workspaces_groups
-- workspaces_projects
-- workspaces_tasks
-- workspaces_users
-- workspaces_workspace_users
+- clients
+- groups
+- projects
+- tasks
+- users
+- workspace_users
 - time entries*
 
 Time entries uses a lookback window set by the config's "detailed_report_trailing_days" to pull data, then uses replication key `updated` as the bookmark.
 
 ### Full Table
 
-The only stream that is full table is `workspaces_tags`.
+The only stream that is full table is `tags`.
 
 ## Tests
 
