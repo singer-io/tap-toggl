@@ -142,48 +142,48 @@ class Workspaces(Stream):
 
 
 class Clients(Stream):
-    name = "workspaces_clients"
+    name = "clients"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Groups(Stream):
-    name = "workspaces_groups"
+    name = "groups"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Projects(Stream):
-    name = "workspaces_projects"
+    name = "projects"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Tasks(Stream):
-    name = "workspaces_tasks"
+    name = "tasks"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class Tags(Stream):
-    name = "workspaces_tags"
+    name = "tags"
     replication_method = "FULL_TABLE"
     key_properties = [ "id" ]
 
 
 class Users(Stream):
-    name = "workspaces_users"
+    name = "users"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
 
 
 class WorkspaceUsers(Stream):
-    name = "workspaces_workspace_users"
+    name = "workspace_users"
     replication_method = "INCREMENTAL"
     replication_key = "at"
     key_properties = [ "id" ]
@@ -199,13 +199,13 @@ class TimeEntries(Stream):
 
 STREAMS = {
     "workspaces": Workspaces,
-    "workspaces_clients": Clients,
-    "workspaces_groups": Groups,
-    "workspaces_projects": Projects,
-    "workspaces_tasks": Tasks,
-    "workspaces_tags": Tags,
-    "workspaces_users": Users,
-    "workspaces_workspace_users": WorkspaceUsers,
+    "clients": Clients,
+    "groups": Groups,
+    "projects": Projects,
+    "tasks": Tasks,
+    "tags": Tags,
+    "users": Users,
+    "workspace_users": WorkspaceUsers,
     "time_entries": TimeEntries
 }
 

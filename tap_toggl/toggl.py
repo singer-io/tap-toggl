@@ -24,6 +24,9 @@ class Toggl(object):
     self.start_date = start_date
     self.workspace_ids = []
     self.user_agent = user_agent
+    res = self._get('https://www.toggl.com/api/v8/workspaces')
+    for item in res:
+      self.workspace_ids.append(item['id'])
 
 
   def request_too_large(error):
@@ -103,43 +106,41 @@ class Toggl(object):
 
   def workspaces(self, column_name=None, bookmark=None):
     res = self._get('https://www.toggl.com/api/v8/workspaces')
-    self.workspace_ids = []
     for item in res:
-      self.workspace_ids.append(item['id'])
       yield item
 
 
-  def workspaces_clients(self, column_name=None, bookmark=None):
+  def clients(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/clients')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
-  def workspaces_groups(self, column_name=None, bookmark=None):
+  def groups(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/groups')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
-  def workspaces_projects(self, column_name=None, bookmark=None): 
+  def projects(self, column_name=None, bookmark=None): 
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/projects')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
-  def workspaces_tasks(self, column_name=None, bookmark=None):
+  def tasks(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/tasks')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
-  def workspaces_tags(self, column_name=None, bookmark=None):
+  def tags(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/tags')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
-  def workspaces_users(self, column_name=None, bookmark=None):
+  def users(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
-  def workspaces_workspace_users(self, column_name=None, bookmark=None):
+  def workspace_users(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/workspace_users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
