@@ -24,6 +24,9 @@ class Toggl(object):
     self.start_date = start_date
     self.workspace_ids = []
     self.user_agent = user_agent
+    res = self._get('https://www.toggl.com/api/v8/workspaces')
+    for item in res:
+      self.workspace_ids.append(item['id'])
 
 
   def request_too_large(error):
@@ -101,11 +104,9 @@ class Toggl(object):
     return self._get('https://www.toggl.com/api/v8/me')
 
 
-  def a_workspaces(self, column_name=None, bookmark=None):
+  def workspaces(self, column_name=None, bookmark=None):
     res = self._get('https://www.toggl.com/api/v8/workspaces')
-    self.workspace_ids = []
     for item in res:
-      self.workspace_ids.append(item['id'])
       yield item
 
 

@@ -11,9 +11,11 @@ Tap for [Toggl](https://www.toggl.com/).
 
 ## Installation
 
+In the directory:
+
 ```
 $ mkvirtualenv -p python3 tap-toggl
-$ pip3 install tap-toggl
+$ pip3 install -e .
 ```
 
 ## Usage
@@ -108,7 +110,7 @@ The streams that are incremental are:
 - projects
 - tasks
 - users
-- workspace users
+- workspace_users
 - time entries*
 
 Time entries uses a lookback window set by the config's "detailed_report_trailing_days" to pull data, then uses replication key `updated` as the bookmark.
