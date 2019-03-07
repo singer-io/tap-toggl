@@ -155,8 +155,6 @@ class Toggl(object):
     except (AttributeError, OverflowError, ValueError, TypeError):
       if bookmark is None:
         start_date = utils.strptime_with_tz(self.start_date).strftime(fmt)
-        one_year_ago = (datetime.today() - timedelta(days=364)).strftime(fmt)
-        start_date = start_date if start_date > one_year_ago else one_year_ago
 
     endpoints = []
     moving_start_date = utils.strptime_with_tz(start_date)
