@@ -2,17 +2,17 @@ version: 2
 jobs:
   build:
     docker:
-      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:tap-tester
+      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:tap-tester-v4
     steps:
       - checkout
       - run:
           name: 'Setup virtual env'
           command: |
-            virtualenv -p python3 /usr/local/share/virtualenvs/tap-toggl
+            python3 -m venv /usr/local/share/virtualenvs/tap-toggl
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
             pip install .[dev]
       - run:
-          name: 'pylint'
+          name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
             make test
@@ -23,18 +23,19 @@ jobs:
             aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/sandbox dev_env.sh
             source dev_env.sh
             source /usr/local/share/virtualenvs/tap-tester/bin/activate
-            run-a-test --tap=tap-toggl \
-                       --target=target-stitch \
-                       --orchestrator=stitch-orchestrator \
-                       --email=harrison+sandboxtest@stitchdata.com \
-                       --password=$SANDBOX_PASSWORD \
-                       --client-id=50 \
-                       tap_tester_toggl_base
+            run-test --tap=tap-toggl \
+                     --target=target-stitch \
+                     --orchestrator=stitch-orchestrator \
+                     --email=harrison+sandboxtest@stitchdata.com \
+                     --password=$SANDBOX_PASSWORD \
+                     --client-id=50 \
+                     tests
 workflows:
   version: 2
   commit:
     jobs:
-      - build
+      - build:
+          context: circleci-user
   build_daily:
     triggers:
       - schedule:
@@ -44,4 +45,5 @@ workflows:
               only:
                 - master
     jobs:
-      - build
+      - build:
+          context: circleci-user

@@ -24,7 +24,7 @@ class Toggl(object):
     self.start_date = start_date
     self.workspace_ids = []
     self.user_agent = user_agent
-    res = self._get('https://www.toggl.com/api/v8/workspaces')
+    res = self._get('https://api.track.toggl.com/api/v8/workspaces')
     for item in res:
       self.workspace_ids.append(item['id'])
 
@@ -101,47 +101,47 @@ class Toggl(object):
 
 
   def is_authorized(self):
-    return self._get('https://www.toggl.com/api/v8/me')
+    return self._get('https://api.track.toggl.com/api/v8/me')
 
 
   def workspaces(self, column_name=None, bookmark=None):
-    res = self._get('https://www.toggl.com/api/v8/workspaces')
+    res = self._get('https://api.track.toggl.com/api/v8/workspaces')
     for item in res:
       yield item
 
 
   def clients(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/clients')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/clients')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def groups(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/groups')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/groups')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def projects(self, column_name=None, bookmark=None): 
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/projects')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/projects')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def tasks(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/tasks')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/tasks')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def tags(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/tags')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/tags')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/users')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def workspace_users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://www.toggl.com/api/v8/workspaces/{workspace_id}/workspace_users')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/workspace_users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
@@ -160,7 +160,7 @@ class Toggl(object):
     moving_start_date = utils.strptime_with_tz(start_date)
     moving_end_date = moving_start_date + timedelta(days=30)
     while moving_start_date <= utils.strptime_with_tz(end_date):
-      new_endpoints = self._get_workspace_endpoints('https://toggl.com/reports/api/v2/details?workspace_id={{workspace_id}}&since={start_date}&until={end_date}&user_agent={user_agent}'.format(start_date=moving_start_date.strftime(fmt), end_date=moving_end_date.strftime(fmt), user_agent=self.user_agent))
+      new_endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/reports/api/v2/details?workspace_id={{workspace_id}}&since={start_date}&until={end_date}&user_agent={user_agent}'.format(start_date=moving_start_date.strftime(fmt), end_date=moving_end_date.strftime(fmt), user_agent=self.user_agent))
       endpoints.extend(new_endpoints)
       moving_start_date += timedelta(days=30)
       moving_end_date = moving_start_date + timedelta(days=30)
