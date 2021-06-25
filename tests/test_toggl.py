@@ -39,7 +39,7 @@ class TogglBase(unittest.TestCase):
 
     def get_properties(self):
         return {'detailed_report_trailing_days': os.getenv('TAP_TOGGL_DETAILED_REPORT_TRAILING_DAYS'),
-                'start_date': os.getenv('TAP_TOGGL_START_DATE')}
+                'start_date': '2018-01-01T00:00:00Z'}
 
 
     def expected_sync_streams(self):
