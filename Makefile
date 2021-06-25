@@ -23,7 +23,7 @@ release:
 
 # Test.
 test:
-	@python3 tests/test_tap_toggl.py
+	@python3 tests/unittests/test_tap_toggl.py
 
 #
 # Phonies.

@@ -12,7 +12,7 @@ jobs:
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
             pip install .[dev]
       - run:
-          name: 'pylint'
+          name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
             make test
