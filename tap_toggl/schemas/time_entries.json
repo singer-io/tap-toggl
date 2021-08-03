@@ -114,7 +114,9 @@
         "null",
         "array"
       ],
-      "items": {}
+      "items": {
+        "type": "string"
+      }
     }
   }
 }
