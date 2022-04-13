@@ -164,6 +164,7 @@ class Toggl(object):
       endpoints.extend(new_endpoints)
       moving_start_date += timedelta(days=30)
       moving_end_date = moving_start_date + timedelta(days=30)
+    endpoints.append("https://api.track.toggl.com/api/v8/time_entries/current")
 
     return self._get_from_endpoints(endpoints, column_name, bookmark, "data")    
 

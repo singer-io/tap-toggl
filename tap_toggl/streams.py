@@ -195,12 +195,6 @@ class TimeEntries(Stream):
     replication_key = "updated"
     key_properties = [ "id" ]
 
-class CurrentTimeEntries(Stream):
-    name = "time_entries_current"
-    replication_method = "FULL_TABLE"
-    key_properties = [ "id" ]
-
-
 STREAMS = {
     "workspaces": Workspaces,
     "clients": Clients,
@@ -210,8 +204,7 @@ STREAMS = {
     "tags": Tags,
     "users": Users,
     "workspace_users": WorkspaceUsers,
-    "time_entries": TimeEntries,
-    "time_entries_current": CurrentTimeEntries,
+    "time_entries": TimeEntries
 }
 
 
