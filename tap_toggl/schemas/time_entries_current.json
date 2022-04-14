@@ -1,0 +1,77 @@
+{
+  "type": [
+    "null",
+    "object"
+  ],
+  "properties": {
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "pid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "wid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "description": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "start": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "stop": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "duration": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "uid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "duronly": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    }
+  }
+}
