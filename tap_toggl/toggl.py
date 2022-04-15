@@ -74,8 +74,9 @@ class Toggl(object):
       if url == "https://api.track.toggl.com/api/v8/time_entries/current":
         res = self._get(url)
         res = res["data"]
-        logger.info('Endpoint returned 1 row.')
-        yield res
+        if res is not None:
+          logger.info('Endpoint returned 1 row.')
+          yield res
       else:  
         page = 0
         length = 1
@@ -176,6 +177,3 @@ class Toggl(object):
   def time_entries_current(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/time_entries/current')
     return self._get_from_endpoints(endpoints, column_name, bookmark, "data")
-
-
-
