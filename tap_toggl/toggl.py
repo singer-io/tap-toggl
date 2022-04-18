@@ -71,18 +71,24 @@ class Toggl(object):
   def _get_response(self, url, column_name=None, bookmark=None, key=None):
     # Special paginated case for `time_entries`, which requires `key` attribute.
     if key == "data":
-      page = 0
-      length = 1
-      while length > 0:
-        url = self._paginate_endpoint(url, page)
+      if url == "https://api.track.toggl.com/api/v8/time_entries/current":
         res = self._get(url)
         res = res["data"]
-        length = len(res)
-        logger.info('Endpoint returned {length} rows.'.format(length=length))
-        for item in res:
-          yield item
-        page += 1
-
+        if res is not None:
+          logger.info('Endpoint returned 1 row.')
+          yield res
+      else:  
+        page = 0
+        length = 1
+        while length > 0:
+          url = self._paginate_endpoint(url, page)
+          res = self._get(url)
+          res = res["data"]
+          length = len(res)
+          logger.info('Endpoint returned {length} rows.'.format(length=length))
+          for item in res:
+            yield item
+          page += 1
     else:
       res = self._get(url)
       res = [] if res is None else res
@@ -168,5 +174,6 @@ class Toggl(object):
     return self._get_from_endpoints(endpoints, column_name, bookmark, "data")    
 
 
-
-
+  def time_entries_current(self, column_name=None, bookmark=None):
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/time_entries/current')
+    return self._get_from_endpoints(endpoints, column_name, bookmark, "data")
