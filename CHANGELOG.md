@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.4
+  * Dependabot update [#15](https://github.com/singer-io/tap-toggl/pull/15)
+
 ## 1.0.3
   * Update the API URL from `https://www.toggl.com` to `https://api.track.toggl.com` [#8](https://github.com/singer-io/tap-toggl/pull/8)
 
