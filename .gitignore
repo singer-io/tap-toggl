@@ -149,3 +149,5 @@ state*.json
 node_modules
 generate-schema.js
 
+# IntelliJ
+.idea/
