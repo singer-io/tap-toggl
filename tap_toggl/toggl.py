@@ -76,6 +76,8 @@ class Toggl(object):
       while length > 0:
         url = self._paginate_endpoint(url, page)
         res = self._get(url)
+        if res.status == 410:
+          continue
         res = res["data"]
         length = len(res)
         logger.info('Endpoint returned {length} rows.'.format(length=length))
