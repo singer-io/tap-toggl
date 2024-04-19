@@ -40,6 +40,18 @@
         "string"
       ]
     },
+    "timezone": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "inactive": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
     "at": {
       "type": [
         "null",
@@ -53,7 +65,24 @@
         "string"
       ]
     },
+    "group_ids": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "items": {
+        "type": [
+          "integer"
+        ]
+      }
+    },
     "invite_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "role": {
       "type": [
         "null",
         "string"
