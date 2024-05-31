@@ -112,16 +112,13 @@ class Stream():
 
         if self.replication_method == "INCREMENTAL":
             for item in res:
-                try:
-                    if self.is_bookmark_old(state, item[self.replication_key]):
-                        # must update bookmark when the entire stream is consumed.
-                        # instead, we use a temporary `session_bookmark`.
-                        self.update_session_bookmark_if_old(item[self.replication_key])
-                        yield (self.stream, item)
-
-                except Exception as e:
-                    logger.error('Handled exception: {error}'.format(error=str(e)))
-                    pass
+                if type(item) == str:
+                    continue
+                if self.is_bookmark_old(state, item[self.replication_key]):
+                    # must update bookmark when the entire stream is consumed.
+                    # instead, we use a temporary `session_bookmark`.
+                    self.update_session_bookmark_if_old(item[self.replication_key])
+                    yield (self.stream, item)
 
         elif self.replication_method == "FULL_TABLE":
             for item in res:
@@ -177,8 +174,7 @@ class Tags(Stream):
 
 class Users(Stream):
     name = "users"
-    replication_method = "INCREMENTAL"
-    replication_key = "at"
+    replication_method = "FULL_TABLE"
     key_properties = [ "id" ]
 
 
