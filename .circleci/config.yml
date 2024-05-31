@@ -22,9 +22,9 @@ jobs:
       - run:
           name: 'Unit Tests'
           command: |
-            source /usr/local/share/virtualenvs/tap-yotpo/bin/activate
+            source /usr/local/share/virtualenvs/tap-toggl/bin/activate
             pip install nose coverage
-            nosetests --with-coverage --cover-erase --cover-package=tap_yotpo --cover-html-dir=htmlcov tests/unittests
+            nosetests --with-coverage --cover-erase --cover-package=tap_toggl --cover-html-dir=htmlcov tests/unittests
             coverage html
       - add_ssh_keys
       - run:
