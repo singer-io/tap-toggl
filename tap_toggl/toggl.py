@@ -30,7 +30,7 @@ class Toggl(object):
       self.workspace_ids.append(item['id'])
       self.organization_ids.append(item['organization_id'])
 
-
+  # pylint: disable=E0213
   def request_too_large(error):
     logger.warning('Request {type} exception caught:  {error}'.format(type=error.__class__.__name__, error=error))
     if isinstance(error, requests.exceptions.HTTPError):
