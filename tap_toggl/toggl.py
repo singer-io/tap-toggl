@@ -23,10 +23,12 @@ class Toggl(object):
     self.trailing_days = int(trailing_days)
     self.start_date = start_date
     self.workspace_ids = []
+    self.organization_ids = []
     self.user_agent = user_agent
-    res = self._get('https://api.track.toggl.com/api/v8/workspaces')
+    res = self._get('https://api.track.toggl.com/api/v9/workspaces')
     for item in res:
       self.workspace_ids.append(item['id'])
+      self.organization_ids.append(item['organization_id'])
 
 
   def request_too_large(error):
@@ -42,7 +44,12 @@ class Toggl(object):
     for workspace_id in self.workspace_ids:
       endpoints.append(endpoint.format(workspace_id=workspace_id))
     return endpoints
-
+  
+  def _get_organization_endpoints(self, endpoint):
+    endpoints = []
+    for organization_id in self.organization_ids:
+      endpoints.append(endpoint.format(organization_id=organization_id))
+    return endpoints
 
   def _paginate_endpoint(self, endpoint, page=0):
     if "&page=" not in endpoint:
@@ -101,47 +108,47 @@ class Toggl(object):
 
 
   def is_authorized(self):
-    return self._get('https://api.track.toggl.com/api/v8/me')
+    return self._get('https://api.track.toggl.com/api/v9/me')
 
 
   def workspaces(self, column_name=None, bookmark=None):
-    res = self._get('https://api.track.toggl.com/api/v8/workspaces')
+    res = self._get('https://api.track.toggl.com/api/v9/workspaces')
     for item in res:
       yield item
 
 
   def clients(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/clients')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/clients')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def groups(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/groups')
+    endpoints = self._get_organization_endpoints('https://api.track.toggl.com/api/v9/organizations/{organization_id}/groups')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def projects(self, column_name=None, bookmark=None): 
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/projects')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/projects')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def tasks(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/tasks')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tasks')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def tags(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/tags')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tags')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/users')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def workspace_users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v8/workspaces/{workspace_id}/workspace_users')
+    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/workspace_users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
