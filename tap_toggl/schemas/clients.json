@@ -16,6 +16,12 @@
         "integer"
       ]
     },
+    "archived": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
     "name": {
       "type": [
         "null",
