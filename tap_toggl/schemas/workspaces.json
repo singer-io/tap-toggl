@@ -89,6 +89,13 @@
       ],
       "format": "date-time"
     },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
     "logo_url": {
       "type": [
         "null",
