@@ -134,7 +134,7 @@ class Stream():
 class Workspaces(Stream):
     name = "workspaces"
     replication_method = "INCREMENTAL"
-    replication_key = "created_at"
+    replication_key = "at"
     key_properties = [ "id" ]
 
 
@@ -169,6 +169,7 @@ class Tasks(Stream):
 class Tags(Stream):
     name = "tags"
     replication_method = "INCREMENTAL"
+    replication_key = "at"
     key_properties = [ "id" ]
 
 
