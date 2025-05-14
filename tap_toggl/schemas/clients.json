@@ -35,19 +35,13 @@
       ],
       "format": "date-time"
     },
-    "notes": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "hrate": {
+    "creator_id": {
       "type": [
         "null",
         "integer"
       ]
     },
-    "cur": {
+    "notes": {
       "type": [
         "null",
         "string"

@@ -4,13 +4,20 @@
     "object"
   ],
   "properties": {
-    "id": {
+    "at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "creator_id": {
       "type": [
         "null",
         "integer"
       ]
     },
-    "workspace_id": {
+    "id": {
       "type": [
         "null",
         "integer"
@@ -22,14 +29,7 @@
         "string"
       ]
     },
-    "at": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
-    },
-    "creator_id": {
+    "workspace_id": {
       "type": [
         "null",
         "integer"

@@ -43,7 +43,7 @@
     "role": {
       "type": [
         "null",
-        "boolean"
+        "string"
       ]
     }
   }

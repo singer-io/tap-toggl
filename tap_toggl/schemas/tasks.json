@@ -4,42 +4,6 @@
     "object"
   ],
   "properties": {
-    "name": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "workspace_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "project_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "user_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "recurring": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
     "active": {
       "type": [
         "null",
@@ -53,6 +17,36 @@
       ],
       "format": "date-time"
     },
+    "estimated_seconds": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "project_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "recurring": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
     "server_deleted_at": {
       "type": [
         "null",
@@ -60,13 +54,31 @@
       ],
       "format": "date-time"
     },
-    "estimated_seconds": {
+    "toggl_accounts_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "tracked_seconds": {
       "type": [
         "null",
         "integer"
       ]
     },
-    "tracked_seconds": {
+    "user_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "user_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "workspace_id": {
       "type": [
         "null",
         "integer"

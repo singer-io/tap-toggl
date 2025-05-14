@@ -4,35 +4,18 @@
     "object"
   ],
   "properties": {
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "organization_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "name": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "profile": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "premium": {
+    "admin": {
       "type": [
         "null",
         "boolean"
       ]
+    },
+    "at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
     },
     "business_ws": {
       "type": [
@@ -40,10 +23,10 @@
         "boolean"
       ]
     },
-    "admin": {
+    "default_currency": {
       "type": [
         "null",
-        "boolean"
+        "string"
       ]
     },
     "default_hourly_rate": {
@@ -52,7 +35,62 @@
         "integer"
       ]
     },
-    "default_currency": {
+    "disable_approvals": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "disable_timesheet_view": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "hide_start_end_times": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "ical_enabled": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "ical_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "last_modified": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "limit_public_project_data": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "logo_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "name": {
       "type": [
         "null",
         "string"
@@ -64,10 +102,64 @@
         "boolean"
       ]
     },
-    "only_admins_see_billable_rates": {
+    "only_admins_may_create_tags": {
       "type": [
         "null",
         "boolean"
+      ]
+    },
+    "only_admins_see_team_dashboard": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "organization_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "premium": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "projects_billable_by_default": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "projects_enforce_billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "projects_private_by_default": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "rate_last_updated": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "reports_collapse": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "role": {
+      "type": [
+        "null",
+        "string"
       ]
     },
     "rounding": {
@@ -82,31 +174,18 @@
         "integer"
       ]
     },
-    "at": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
-    },
-    "created_at": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
-    },
-    "logo_url": {
+    "server_deleted_at": {
       "type": [
         "null",
         "string"
       ]
+
     },
-    "ical_url": {
-      "type": [
-        "null",
-        "string"
-      ]
-    }
+    "profile": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      }
   }
 }

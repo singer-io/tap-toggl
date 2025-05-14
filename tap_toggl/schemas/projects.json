@@ -4,7 +4,172 @@
     "object"
   ],
   "properties": {
+    "active": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "actual_hours": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "actual_seconds": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "auto_estimates": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "can_track_time": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "cid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "client_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "client_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "color": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "currency": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "estimated_hours": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "estimated_seconds": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "fixed_fee": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
     "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "is_private": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "pinned": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "rate": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "rate_last_updated": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "recurring": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "start_date": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "template": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "template_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "wid": {
       "type": [
         "null",
         "integer"
@@ -15,43 +180,6 @@
         "null",
         "integer"
       ]
-    },
-    "cid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "name": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "billable": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "is_private": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "active": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "at": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
     }
   }
 }

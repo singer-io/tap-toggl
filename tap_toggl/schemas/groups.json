@@ -30,7 +30,7 @@
       ],
       "items": {
         "type": [
-          "string"
+          "integer"
         ]
       }
     },
@@ -61,6 +61,12 @@
             "type": [
               "null",
               "string"
+            ]
+          },
+          "inactive": {
+            "type": [
+              "null",
+              "boolean"
             ]
           },
           "joined": {

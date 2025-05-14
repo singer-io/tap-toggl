@@ -4,25 +4,7 @@
     "object"
   ],
   "properties": {
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "uid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "wid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "admin": {
+    "2fa_enabled": {
       "type": [
         "null",
         "boolean"
@@ -34,19 +16,7 @@
         "boolean"
       ]
     },
-    "email": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "timezone": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "inactive": {
+    "admin": {
       "type": [
         "null",
         "boolean"
@@ -59,7 +29,13 @@
       ],
       "format": "date-time"
     },
-    "name": {
+    "avatar_file_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "email": {
       "type": [
         "null",
         "string"
@@ -76,7 +52,67 @@
         ]
       }
     },
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "inactive": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "invitation_code": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
     "invite_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "is_direct": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "labor_cost": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "labor_cost_last_updated": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "organization_admin": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "rate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "rate_last_updated": {
       "type": [
         "null",
         "string"
@@ -86,6 +122,54 @@
       "type": [
         "null",
         "string"
+      ]
+    },
+    "role_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "timezone": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "uid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "view_edit_billable_rates": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "view_edit_labor_costs": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "wid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "working_hours_in_minutes": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "workspace_admin": {
+      "type": [
+        "null",
+        "boolean"
       ]
     }
   }
