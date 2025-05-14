@@ -4,10 +4,70 @@
     "object"
   ],
   "properties": {
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "organization_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "premium": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "business_ws": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
     "admin": {
       "type": [
         "null",
         "boolean"
+      ]
+    },
+    "default_hourly_rate": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "default_currency": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "only_admins_may_create_projects": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "rounding": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "rounding_minutes": {
+      "type": [
+        "null",
+        "integer"
       ]
     },
     "at": {
@@ -17,22 +77,16 @@
       ],
       "format": "date-time"
     },
-    "business_ws": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "default_currency": {
+    "logo_url": {
       "type": [
         "null",
         "string"
       ]
     },
-    "default_hourly_rate": {
+    "ical_url": {
       "type": [
         "null",
-        "integer"
+        "string"
       ]
     },
     "disable_approvals": {
@@ -59,18 +113,6 @@
         "boolean"
       ]
     },
-    "ical_url": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
     "last_modified": {
       "type": [
         "null",
@@ -84,24 +126,6 @@
         "boolean"
       ]
     },
-    "logo_url": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "name": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "only_admins_may_create_projects": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
     "only_admins_may_create_tags": {
       "type": [
         "null",
@@ -109,18 +133,6 @@
       ]
     },
     "only_admins_see_team_dashboard": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "organization_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "premium": {
       "type": [
         "null",
         "boolean"
@@ -160,18 +172,6 @@
       "type": [
         "null",
         "string"
-      ]
-    },
-    "rounding": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "rounding_minutes": {
-      "type": [
-        "null",
-        "integer"
       ]
     },
     "server_deleted_at": {

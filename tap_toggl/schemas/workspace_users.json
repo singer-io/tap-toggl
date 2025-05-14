@@ -4,7 +4,25 @@
     "object"
   ],
   "properties": {
-    "2fa_enabled": {
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "uid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "wid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "admin": {
       "type": [
         "null",
         "boolean"
@@ -16,7 +34,13 @@
         "boolean"
       ]
     },
-    "admin": {
+    "email": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "inactive": {
       "type": [
         "null",
         "boolean"
@@ -29,13 +53,7 @@
       ],
       "format": "date-time"
     },
-    "avatar_file_name": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "email": {
+    "name": {
       "type": [
         "null",
         "string"
@@ -52,25 +70,31 @@
         ]
       }
     },
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "inactive": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "invitation_code": {
+    "invite_url": {
       "type": [
         "null",
         "string"
       ]
     },
-    "invite_url": {
+    "role": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "2fa_enabled": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "avatar_file_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "invitation_code": {
       "type": [
         "null",
         "string"
@@ -94,12 +118,6 @@
         "string"
       ]
     },
-    "name": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
     "organization_admin": {
       "type": [
         "null",
@@ -118,12 +136,6 @@
         "string"
       ]
     },
-    "role": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
     "role_id": {
       "type": [
         "null",
@@ -136,12 +148,6 @@
         "string"
       ]
     },
-    "uid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
     "view_edit_billable_rates": {
       "type": [
         "null",
@@ -152,12 +158,6 @@
       "type": [
         "null",
         "boolean"
-      ]
-    },
-    "wid": {
-      "type": [
-        "null",
-        "integer"
       ]
     },
     "working_hours_in_minutes": {

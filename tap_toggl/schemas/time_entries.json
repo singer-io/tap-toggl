@@ -4,6 +4,37 @@
     "object"
   ],
   "properties": {
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "pid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "uid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "description": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "start": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
     "at": {
       "type": [
         "null",
@@ -15,12 +46,6 @@
       "type": [
         "null",
         "boolean"
-      ]
-    },
-    "description": {
-      "type": [
-        "null",
-        "string"
       ]
     },
     "duration": {
@@ -35,30 +60,11 @@
         "boolean"
       ]
     },
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "pid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
     "project_id": {
       "type": [
         "null",
         "integer"
       ]
-    },
-    "start": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
     },
     "stop": {
       "type": [
@@ -90,12 +96,6 @@
       }
     },
     "task_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "uid": {
       "type": [
         "null",
         "integer"

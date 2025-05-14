@@ -4,11 +4,54 @@
     "object"
   ],
   "properties": {
+    "id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "workspace_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "cid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "is_private": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
     "active": {
       "type": [
         "null",
         "boolean"
       ]
+    },
+    "at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
     },
     "actual_hours": {
       "type": [
@@ -22,20 +65,7 @@
         "integer"
       ]
     },
-    "at": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
-    },
     "auto_estimates": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "billable": {
       "type": [
         "null",
         "boolean"
@@ -45,12 +75,6 @@
       "type": [
         "null",
         "boolean"
-      ]
-    },
-    "cid": {
-      "type": [
-        "null",
-        "integer"
       ]
     },
     "client_id": {
@@ -100,24 +124,6 @@
       "type": [
         "null",
         "integer"
-      ]
-    },
-    "id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "is_private": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "name": {
-      "type": [
-        "null",
-        "string"
       ]
     },
     "pinned": {
@@ -170,12 +176,6 @@
       ]
     },
     "wid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "workspace_id": {
       "type": [
         "null",
         "integer"

@@ -35,16 +35,16 @@
       ],
       "format": "date-time"
     },
-    "creator_id": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
     "notes": {
       "type": [
         "null",
         "string"
+      ]
+    },
+    "creator_id": {
+      "type": [
+        "null",
+        "integer"
       ]
     }
   }
