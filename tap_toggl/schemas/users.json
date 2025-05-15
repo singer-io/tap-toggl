@@ -45,6 +45,18 @@
         "null",
         "string"
       ]
+    },
+    "2fa_enabled": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "timezone": {
+      "type": [
+        "null",
+        "string"
+      ]
     }
   }
 }

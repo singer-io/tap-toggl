@@ -28,11 +28,18 @@
         "null",
         "array"
       ],
-      "items": {
+    "items": {
         "type": [
+          "null",
           "integer"
         ]
       }
+    },
+    "permissions": {
+        "type": [
+        "null",
+        "string"
+        ]
     },
     "users": {
       "type": [
@@ -74,6 +81,89 @@
               "null",
               "boolean"
             ]
+          },
+          "active": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "created_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "id": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "invited_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "organization_user_id": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "role_code": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "role_id": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "role_name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "suspended_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
           }
         }
       }

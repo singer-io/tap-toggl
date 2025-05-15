@@ -83,6 +83,78 @@
         "null",
         "string"
       ]
+    },
+    "avatar_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "client_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_ext_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_ext_type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_provider": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "permissions": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "project_billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_color": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "project_is_private": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "rate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "rate_last_updated": {
+      "type": [
+        "null",
+        "string"
+      ]
     }
   }
 }

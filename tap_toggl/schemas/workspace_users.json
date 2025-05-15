@@ -171,6 +171,18 @@
         "null",
         "boolean"
       ]
+    },
+    "user_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "workspace_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
     }
   }
 }

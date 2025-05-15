@@ -118,6 +118,78 @@
         "null",
         "integer"
       ]
+    },
+    "client_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "expense_ids": {
+      "type": [
+        "null",
+        "array"
+      ]
+    },
+    "permissions": {
+      "type": [
+        "null",
+        "array"
+      ]
+    },
+    "project_active": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_color": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "project_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "shared_with": {
+      "type": [
+        "null",
+        "array"
+      ]
+    },
+    "task_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "tid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "user_avatar_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "user_name": {
+      "type": [
+        "null",
+        "string"
+      ]
     }
   }
 }

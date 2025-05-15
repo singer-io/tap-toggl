@@ -186,6 +186,75 @@
           "null",
           "integer"
         ]
-      }
+      },
+    "active_users": {
+        "type": [
+          "null",
+          "integer"
+        ]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "deleted_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "organization_name": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "role_code": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "role_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "role_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "status": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "total_users": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "updated_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "user_status": {
+      "type": [
+        "null",
+        "string"
+      ]
+    }
   }
 }

@@ -180,6 +180,92 @@
         "null",
         "integer"
       ]
+    },
+    "gid": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "group_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "labor_cost": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "labor_cost_last_updated": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "manager": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "user_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "active_tasks": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "archieved": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "creator": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "deleted_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "project_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "updated_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "visibility": {
+      "type": [
+        "null",
+        "string"
+      ]
     }
   }
 }
