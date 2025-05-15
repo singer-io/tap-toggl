@@ -50,9 +50,26 @@ class Toggl(object):
     for organization_id in self.organization_ids:
       endpoints.append(endpoint.format(organization_id=organization_id))
     return endpoints
-
+  
   def _paginate_endpoint(self, endpoint, page=0):
-    if "&page=" not in endpoint:
+    if "/tasks" in endpoint:
+      if "?page=" not in endpoint and "&page=" not in endpoint:
+        # Add the page parameter if it doesn't exist
+        if "?" not in endpoint:
+          endpoint += f"?page={page + 1}"
+        else:
+          endpoint += f"&page={page + 1}"
+      else:
+        # Update the existing page parameter
+        base_url, query_string = endpoint.split('?', 1)
+        query_params = query_string.split('&')
+        for i, param in enumerate(query_params):
+          if param.startswith("page="):
+            query_params[i] = f"page={page + 1}"
+            break
+        endpoint = f"{base_url}?" + "&".join(query_params)
+
+    elif "&page=" not in endpoint:
       endpoint += "&page=0"
     else:
         array = endpoint.split('&')
@@ -63,7 +80,7 @@ class Toggl(object):
             index += 1
         endpoint = '&'.join(array)
     return endpoint
-
+  
 
   @backoff.on_exception(backoff.expo,
                         requests.exceptions.RequestException,
@@ -83,20 +100,23 @@ class Toggl(object):
       while length > 0:
         url = self._paginate_endpoint(url, page)
         res = self._get(url)
-        res = res["data"]
-        length = len(res)
-        logger.info('Endpoint returned {length} rows.'.format(length=length))
-        for item in res:
-          yield item
-        page += 1
+        data = res["data"]
+        if data:
+          length = len(data)
+          logger.info('Endpoint returned {length} rows.'.format(length=length))
+          for item in data:
+            yield item
+          page += 1
+        else:
+          length = 0
 
     else:
       res = self._get(url)
       res = [] if res is None else res
-      res = res[key] if key is not None else res
-      length = len(res)
+      data = res[key] if key is not None else res
+      length = len(data)
       logger.info('Endpoint returned {length} rows.'.format(length=length))
-      for item in res:
+      for item in data:
         yield item
 
 
@@ -134,7 +154,7 @@ class Toggl(object):
 
   def tasks(self, column_name=None, bookmark=None):
     endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tasks')
-    return self._get_from_endpoints(endpoints, column_name, bookmark)
+    return self._get_from_endpoints(endpoints, column_name, bookmark, key='data')
 
 
   def tags(self, column_name=None, bookmark=None):
