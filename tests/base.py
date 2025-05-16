@@ -146,7 +146,7 @@ class TogglBaseTest(unittest.TestCase):
 
     def get_credentials(self):
         """Authentication information for the test account."""
-        return {"Authorization": os.getenv("TAP_TOGGL_API_TOKEN")}
+        return {"api_token": os.getenv("TAP_TOGGL_API_TOKEN")}
 
     def get_properties(self, original: bool = True):
         """Configuration of properties required for the tap."""
