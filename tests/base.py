@@ -36,7 +36,7 @@ class TogglBaseTest(unittest.TestCase):
 
     def setUp(self):
         """Checking required environment variables."""
-        if os.getenv("TAP_TOGGL_ACCESS_TOKEN", None) is None:
+        if os.getenv("TAP_TOGGL_API_TOKEN", None) is None:
             raise Exception("Missing test-required environment variables")
 
     def get_type(self):
@@ -146,7 +146,7 @@ class TogglBaseTest(unittest.TestCase):
 
     def get_credentials(self):
         """Authentication information for the test account."""
-        return {"token": os.getenv("TAP_TOGGL_ACCESS_TOKEN")}
+        return {"token": os.getenv("TAP_TOGGL_API_TOKEN")}
 
     def get_properties(self, original: bool = True):
         """Configuration of properties required for the tap."""
