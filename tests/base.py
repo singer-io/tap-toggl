@@ -52,7 +52,7 @@ class TogglBaseTest(unittest.TestCase):
         """The expected streams and metadata about the streams."""
         return {
             "workspaces": {
-                self.PRIMARY_KEYS: {"id"},
+                self.PRIMARY_KEYS: {"group_id"},
                 self.REPLICATION_METHOD: self.INCREMENTAL,
                 self.REPLICATION_KEYS: {"at"},
                 self.OBEYS_START_DATE: True,
