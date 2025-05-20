@@ -53,17 +53,11 @@ class Toggl(object):
     return endpoints
 
   def _paginate_endpoint(self, endpoint, page=0):
-    if "/tasks" in endpoint:
-        page += 1
-
-    # Parse the URL into components
     parsed_url = urlparse(endpoint)
     query_params = parse_qs(parsed_url.query)
 
-    # Update or add the 'page' parameter
     query_params['page'] = [str(page)]
 
-    # Reconstruct the URL with updated query parameters
     updated_query = urlencode(query_params, doseq=True)
     updated_url = urlunparse(parsed_url._replace(query=updated_query))
 
@@ -83,7 +77,7 @@ class Toggl(object):
   def _get_response(self, url, column_name=None, bookmark=None, key=None):
     # Special paginated case for `time_entries`, which requires `key` attribute.
     if key == "data":
-      page = 0
+      page = 1 if "/tasks" in url else 0
       length = 1
       while length > 0:
         url = self._paginate_endpoint(url, page)
