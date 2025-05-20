@@ -10,6 +10,7 @@ import backoff
 import requests
 import logging
 import sys
+from urllib.parse import urlencode, urlparse, parse_qs, urlunparse
 
 
 logger = logging.getLogger()
@@ -53,33 +54,20 @@ class Toggl(object):
 
   def _paginate_endpoint(self, endpoint, page=0):
     if "/tasks" in endpoint:
-      if "?page=" not in endpoint and "&page=" not in endpoint:
-        # Add the page parameter if it doesn't exist
-        if "?" not in endpoint:
-          endpoint += f"?page={page + 1}"
-        else:
-          endpoint += f"&page={page + 1}"
-      else:
-        # Update the existing page parameter
-        base_url, query_string = endpoint.split('?', 1)
-        query_params = query_string.split('&')
-        for i, param in enumerate(query_params):
-          if param.startswith("page="):
-            query_params[i] = f"page={page + 1}"
-            break
-        endpoint = f"{base_url}?" + "&".join(query_params)
+        page += 1
 
-    elif "&page=" not in endpoint:
-      endpoint += "&page=0"
-    else:
-        array = endpoint.split('&')
-        index = 0
-        while index < len(array):
-            if "page=" in array[index]:
-                array[index] = "page=" + str(page)
-            index += 1
-        endpoint = '&'.join(array)
-    return endpoint
+    # Parse the URL into components
+    parsed_url = urlparse(endpoint)
+    query_params = parse_qs(parsed_url.query)
+
+    # Update or add the 'page' parameter
+    query_params['page'] = [str(page)]
+
+    # Reconstruct the URL with updated query parameters
+    updated_query = urlencode(query_params, doseq=True)
+    updated_url = urlunparse(parsed_url._replace(query=updated_query))
+
+    return updated_url
 
 
   @backoff.on_exception(backoff.expo,
