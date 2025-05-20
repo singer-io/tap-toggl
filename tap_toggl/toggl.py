@@ -12,6 +12,8 @@ import logging
 import sys
 from urllib.parse import urlencode, urlparse, parse_qs, urlunparse
 
+BASE_URL = "htttps://api.track.toggl.com/api"
+API_VERSION = "v9"
 
 logger = logging.getLogger()
 
@@ -26,7 +28,7 @@ class Toggl(object):
     self.workspace_ids = []
     self.organization_ids = []
     self.user_agent = user_agent
-    res = self._get('https://api.track.toggl.com/api/v9/workspaces')
+    res = self._get(f'{BASE_URL}/{API_VERSION}/workspaces')
     for item in res:
       self.workspace_ids.append(item['id'])
       self.organization_ids.append(item['organization_id'])
@@ -110,47 +112,47 @@ class Toggl(object):
 
 
   def is_authorized(self):
-    return self._get('https://api.track.toggl.com/api/v9/me')
+    return self._get(f'{BASE_URL}/{API_VERSION}/me')
 
 
   def workspaces(self, column_name=None, bookmark=None):
-    res = self._get('https://api.track.toggl.com/api/v9/workspaces')
+    res = self._get(f'{BASE_URL}/{API_VERSION}/workspaces')
     for item in res:
       yield item
 
 
   def clients(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/clients')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}/workspaces/{workspace_id}/clients')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def groups(self, column_name=None, bookmark=None):
-    endpoints = self._get_organization_endpoints('https://api.track.toggl.com/api/v9/organizations/{organization_id}/groups')
+    endpoints = self._get_organization_endpoints(f'{BASE_URL}/{API_VERSION}/organizations/{organization_id}/groups')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def projects(self, column_name=None, bookmark=None): 
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/projects')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}/workspaces/{workspace_id}/projects')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def tasks(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tasks')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}/workspaces/{workspace_id}/tasks')
     return self._get_from_endpoints(endpoints, column_name, bookmark, key='data')
 
 
   def tags(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tags')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}/workspaces/{workspace_id}/tags')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/users')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}/workspaces/{workspace_id}/users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def workspace_users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/workspace_users')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}/workspaces/{workspace_id}/workspace_users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
