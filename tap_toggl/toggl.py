@@ -50,7 +50,7 @@ class Toggl(object):
     for organization_id in self.organization_ids:
       endpoints.append(endpoint.format(organization_id=organization_id))
     return endpoints
-  
+
   def _paginate_endpoint(self, endpoint, page=0):
     if "/tasks" in endpoint:
       if "?page=" not in endpoint and "&page=" not in endpoint:
@@ -80,7 +80,7 @@ class Toggl(object):
             index += 1
         endpoint = '&'.join(array)
     return endpoint
-  
+
 
   @backoff.on_exception(backoff.expo,
                         requests.exceptions.RequestException,
