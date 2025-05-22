@@ -10,7 +10,10 @@ import backoff
 import requests
 import logging
 import sys
+from urllib.parse import urlencode, urlparse, parse_qs, urlunparse
 
+BASE_URL = "https://api.track.toggl.com/api"
+API_VERSION = "v9"
 
 logger = logging.getLogger()
 
@@ -25,7 +28,7 @@ class Toggl(object):
     self.workspace_ids = []
     self.organization_ids = []
     self.user_agent = user_agent
-    res = self._get('https://api.track.toggl.com/api/v9/workspaces')
+    res = self._get(f'{BASE_URL}/{API_VERSION}/workspaces')
     for item in res:
       self.workspace_ids.append(item['id'])
       self.organization_ids.append(item['organization_id'])
@@ -52,17 +55,15 @@ class Toggl(object):
     return endpoints
 
   def _paginate_endpoint(self, endpoint, page=0):
-    if "&page=" not in endpoint:
-      endpoint += "&page=0"
-    else:
-        array = endpoint.split('&')
-        index = 0
-        while index < len(array):
-            if "page=" in array[index]:
-                array[index] = "page=" + str(page)
-            index += 1
-        endpoint = '&'.join(array)
-    return endpoint
+    parsed_url = urlparse(endpoint)
+    query_params = parse_qs(parsed_url.query)
+
+    query_params['page'] = [str(page)]
+
+    updated_query = urlencode(query_params, doseq=True)
+    updated_url = urlunparse(parsed_url._replace(query=updated_query))
+
+    return updated_url
 
 
   @backoff.on_exception(backoff.expo,
@@ -78,25 +79,28 @@ class Toggl(object):
   def _get_response(self, url, column_name=None, bookmark=None, key=None):
     # Special paginated case for `time_entries`, which requires `key` attribute.
     if key == "data":
-      page = 0
+      page = 1 if "/tasks" in url else 0
       length = 1
       while length > 0:
         url = self._paginate_endpoint(url, page)
         res = self._get(url)
-        res = res["data"]
-        length = len(res)
-        logger.info('Endpoint returned {length} rows.'.format(length=length))
-        for item in res:
-          yield item
-        page += 1
+        data = res["data"]
+        if data:
+          length = len(data)
+          logger.info('Endpoint returned {length} rows.'.format(length=length))
+          for item in data:
+            yield item
+          page += 1
+        else:
+          length = 0
 
     else:
       res = self._get(url)
       res = [] if res is None else res
-      res = res[key] if key is not None else res
-      length = len(res)
+      data = res[key] if key is not None else res
+      length = len(data)
       logger.info('Endpoint returned {length} rows.'.format(length=length))
-      for item in res:
+      for item in data:
         yield item
 
 
@@ -108,47 +112,47 @@ class Toggl(object):
 
 
   def is_authorized(self):
-    return self._get('https://api.track.toggl.com/api/v9/me')
+    return self._get(f'{BASE_URL}/{API_VERSION}' + '/me')
 
 
   def workspaces(self, column_name=None, bookmark=None):
-    res = self._get('https://api.track.toggl.com/api/v9/workspaces')
+    res = self._get(f'{BASE_URL}/{API_VERSION}' + '/workspaces')
     for item in res:
       yield item
 
 
   def clients(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/clients')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/workspaces/{workspace_id}/clients')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def groups(self, column_name=None, bookmark=None):
-    endpoints = self._get_organization_endpoints('https://api.track.toggl.com/api/v9/organizations/{organization_id}/groups')
+    endpoints = self._get_organization_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/organizations/{organization_id}/groups')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def projects(self, column_name=None, bookmark=None): 
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/projects')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/workspaces/{workspace_id}/projects')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def tasks(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tasks')
-    return self._get_from_endpoints(endpoints, column_name, bookmark)
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/workspaces/{workspace_id}/tasks')
+    return self._get_from_endpoints(endpoints, column_name, bookmark, key='data')
 
 
   def tags(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/tags')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/workspaces/{workspace_id}/tags')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/users')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/workspaces/{workspace_id}/users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 
   def workspace_users(self, column_name=None, bookmark=None):
-    endpoints = self._get_workspace_endpoints('https://api.track.toggl.com/api/v9/workspaces/{workspace_id}/workspace_users')
+    endpoints = self._get_workspace_endpoints(f'{BASE_URL}/{API_VERSION}' + r'/workspaces/{workspace_id}/workspace_users')
     return self._get_from_endpoints(endpoints, column_name, bookmark)
 
 

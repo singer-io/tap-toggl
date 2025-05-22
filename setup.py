@@ -10,9 +10,9 @@ setup(name='tap-toggl',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_toggl'],
       install_requires=[
-          'singer-python==5.1.5',
-          'requests==2.20.0',
-          'backoff==1.3.2'
+          'singer-python==6.1.1',
+          'requests==2.32.3',
+          'backoff==2.2.1'
       ],
       extras_require={
         "dev": [

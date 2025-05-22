@@ -149,7 +149,7 @@ class Groups(Stream):
     name = "groups"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = [ "group_id" ]
 
 
 class Projects(Stream):
@@ -168,7 +168,8 @@ class Tasks(Stream):
 
 class Tags(Stream):
     name = "tags"
-    replication_method = "FULL_TABLE"
+    replication_method = "INCREMENTAL"
+    replication_key = "at"
     key_properties = [ "id" ]
 
 
