@@ -16,22 +16,28 @@
         "integer"
       ]
     },
-    "wid": {
+    "workspace_id": {
       "type": [
         "null",
         "integer"
       ]
     },
-    "pid": {
+    "project_id": {
       "type": [
         "null",
         "integer"
       ]
     },
-    "uid": {
+    "user_id": {
       "type": [
         "null",
         "integer"
+      ]
+    },
+    "recurring": {
+      "type": [
+        "null",
+        "boolean"
       ]
     },
     "active": {
@@ -47,10 +53,107 @@
       ],
       "format": "date-time"
     },
+    "server_deleted_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
     "estimated_seconds": {
       "type": [
         "null",
         "integer"
+      ]
+    },
+    "tracked_seconds": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "toggl_accounts_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "user_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "avatar_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "client_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_ext_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_ext_type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_provider": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "permissions": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "project_billable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_color": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "project_is_private": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "project_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "rate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "rate_last_updated": {
+      "type": [
+        "null",
+        "string"
       ]
     }
   }

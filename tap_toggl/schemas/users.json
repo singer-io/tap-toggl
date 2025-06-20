@@ -10,12 +10,6 @@
         "integer"
       ]
     },
-    "default_wid": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
     "email": {
       "type": [
         "null",
@@ -28,110 +22,37 @@
         "string"
       ]
     },
-    "jquery_timeofday_format": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "jquery_date_format": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "timeofday_format": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "date_format": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "store_start_and_stop_time": {
+    "is_active": {
       "type": [
         "null",
         "boolean"
       ]
     },
-    "beginning_of_week": {
+    "is_admin": {
       "type": [
         "null",
-        "integer"
+        "boolean"
       ]
     },
-    "language": {
+    "inactive": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "role": {
       "type": [
         "null",
         "string"
       ]
     },
-    "image_url": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "sidebar_piechart": {
+    "2fa_enabled": {
       "type": [
         "null",
         "boolean"
       ]
     },
-    "at": {
-      "type": [
-        "null",
-        "string"
-      ],
-      "format": "date-time"
-    },
-    "retention": {
-      "type": [
-        "null",
-        "integer"
-      ]
-    },
-    "record_timeline": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "render_timeline": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "timeline_enabled": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "timeline_experiment": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "new_blog_post": {
-      "type": [
-        "null",
-        "string"
-      ]
-    },
-    "should_upgrade": {
-      "type": [
-        "null",
-        "boolean"
-      ]
-    },
-    "invitation": {
+    "timezone": {
       "type": [
         "null",
         "string"

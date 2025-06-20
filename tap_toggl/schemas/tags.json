@@ -10,13 +10,57 @@
         "integer"
       ]
     },
-    "wid": {
+    "workspace_id": {
       "type": [
         "null",
         "integer"
       ]
     },
     "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "creator_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "deleted_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "integration_ext_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_ext_type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_provider": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "permissions": {
       "type": [
         "null",
         "string"
