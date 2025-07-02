@@ -12,7 +12,7 @@ setup(name='tap-toggl',
       install_requires=[
           'singer-python==5.13.2',
           'requests==2.32.4',
-          'backoff==1.8.0'
+          'backoff==1.10.0'
       ],
       entry_points='''
           [console_scripts]
