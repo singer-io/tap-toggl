@@ -24,7 +24,7 @@ jobs:
             source dev_env.sh
             source /usr/local/share/virtualenvs/tap-tester/bin/activate
             run-test --tap=tap-toggl \
-                     tests
+                     tests/test_toggl.py
 workflows:
   version: 2
   commit:

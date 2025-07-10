@@ -1,4 +1,3 @@
-from tap_tester.scenario import SCENARIOS
 import tap_tester.connections as connections
 import tap_tester.menagerie as menagerie
 import tap_tester.runner as runner
@@ -265,5 +264,3 @@ class TogglBase(unittest.TestCase):
                     # verify that the minimum bookmark sent to the target for the second sync
                     # is greater than or equal to the bookmark from the first sync
                     self.assertTrue(target_value >= state_value)
-
-SCENARIOS.add(TogglBase)
