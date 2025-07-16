@@ -3,16 +3,16 @@
 from setuptools import setup
 
 setup(name='tap-toggl',
-      version='1.0.3',
+      version='1.0.4',
       description='Singer.io tap for extracting data from the Toggl API',
       author='Stitch',
       url='http://github.com/singer-io/tap-toggl',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_toggl'],
       install_requires=[
-          'singer-python==5.1.5',
-          'requests==2.20.0',
-          'backoff==1.3.2'
+          'singer-python==5.13.2',
+          'requests==2.32.4',
+          'backoff==1.10.0'
       ],
       entry_points='''
           [console_scripts]
