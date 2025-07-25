@@ -2,15 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:stitch-tap-tester
+      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:stitch-tap-tester-uv
     steps:
       - checkout
       - run:
           name: 'Setup virtual env'
           command: |
-            python3 -m venv /usr/local/share/virtualenvs/tap-toggl
+            uv venv --python 3.9 /usr/local/share/virtualenvs/tap-toggl
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
-            pip install .[dev]
+            uv pip install .[dev]
       - run:
           name: 'Unit Tests'
           command: |
@@ -20,11 +20,11 @@ jobs:
       - run:
           name: 'Integration Tests'
           command: |
+            source /usr/local/share/virtualenvs/tap-tester/bin/activate
+            uv pip install --upgrade awscli
             aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/sandbox dev_env.sh
             source dev_env.sh
-            source /usr/local/share/virtualenvs/tap-tester/bin/activate
-            run-test --tap=tap-toggl \
-                     tests/test_toggl.py
+            run-test --tap=tap-toggl tests/test_toggl.py
 workflows:
   version: 2
   commit:
