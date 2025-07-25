@@ -15,7 +15,8 @@ jobs:
           name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
-            make test
+            uv pip install pytest
+            pytest tests/unittests
       - add_ssh_keys
       - run:
           name: 'Integration Tests'
