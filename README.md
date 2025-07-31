@@ -117,7 +117,10 @@ Time entries uses a lookback window set by the config's "detailed_report_trailin
 
 ### Full Table
 
-The only stream that is full table is `tags`.
+The streams that are full_table are:
+
+- tags
+- time_entries_current
 
 ## Tests
 
