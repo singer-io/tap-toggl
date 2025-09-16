@@ -10,13 +10,31 @@
         "integer"
       ]
     },
+    "organization_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
     "name": {
       "type": [
         "null",
         "string"
       ]
     },
+    "profile": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
     "premium": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "business_ws": {
       "type": [
         "null",
         "boolean"
@@ -72,6 +90,12 @@
       "format": "date-time"
     },
     "logo_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "ical_url": {
       "type": [
         "null",
         "string"

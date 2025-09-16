@@ -10,7 +10,7 @@
         "integer"
       ]
     },
-    "wid": {
+    "workspace_id": {
       "type": [
         "null",
         "integer"

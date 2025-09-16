@@ -136,6 +136,24 @@
         "null",
         "string"
       ]
+    },
+    "is_active": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "is_admin": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "inactive": {
+      "type": [
+        "null",
+        "boolean"
+      ]
     }
   }
 }
