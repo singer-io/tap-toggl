@@ -4,16 +4,15 @@ orbs:
 jobs:
   build:
     docker:
-      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:stitch-tap-tester
+      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:stitch-tap-tester-uv
     steps:
       - checkout
       - run:
           name: 'Setup virtual env'
           command: |
-            python3 -m venv /usr/local/share/virtualenvs/tap-toggl
+            uv venv --python 3.9 /usr/local/share/virtualenvs/tap-toggl
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
-            pip install -U 'pip==22.2.2' 'setuptools==65.3.0'
-            pip install .[dev]
+            uv pip install .[dev]
       - run:
           name: 'pylint'
           command: |
@@ -23,17 +22,18 @@ jobs:
           name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
-            pip install nose coverage
+            uv pip install nose coverage
             nosetests --with-coverage --cover-erase --cover-package=tap_toggl --cover-html-dir=htmlcov tests/unittests
             coverage html
       - add_ssh_keys
       - run:
           name: 'Integration Tests'
           command: |
-              aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/tap_tester_sandbox dev_env.sh
-              source dev_env.sh
-              source /usr/local/share/virtualenvs/tap-tester/bin/activate
-              run-test --tap=tap-toggl tests
+            source /usr/local/share/virtualenvs/tap-tester/bin/activate
+            uv pip install --upgrade awscli
+            aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/tap_tester_sandbox dev_env.sh
+            source dev_env.sh
+            run-test --tap=tap-toggl tests
 workflows:
   version: 2
   commit:
