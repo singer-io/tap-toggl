@@ -1,18 +1,13 @@
-
-# 
+#
 # Module dependencies.
-# 
+#
 
-import os
 import json
-import datetime
-import pytz
-import singer
-from singer import metadata
-from singer import utils
-from singer.metrics import Point
-from dateutil.parser import parse
+import os
 
+import singer
+from dateutil.parser import parse
+from singer import metadata, utils
 
 logger = singer.get_logger()
 KEY_PROPERTIES = ['id']
@@ -24,7 +19,7 @@ def get_abs_path(path):
 
 def needs_parse_to_date(string):
     if isinstance(string, str):
-        try: 
+        try:
             parse(string)
             return True
         except ValueError:
@@ -40,30 +35,24 @@ class Stream():
     key_properties = KEY_PROPERTIES
     session_bookmark = None
 
-
     def __init__(self, client=None):
         self.client = client
-
 
     def is_session_bookmark_old(self, value):
         if self.session_bookmark is None:
             return True
         return utils.strptime_with_tz(value) > utils.strptime_with_tz(self.session_bookmark)
 
-
     def update_session_bookmark_if_old(self, value):
         if self.is_session_bookmark_old(value):
             self.session_bookmark = value
 
-
     def get_bookmark(self, state):
         return singer.get_bookmark(state, self.name, self.replication_key)
-
 
     def update_bookmark_if_old(self, state, value):
         if self.is_bookmark_old(state, value):
             singer.write_bookmark(state, self.name, self.replication_key, value)
-
 
     def is_bookmark_old(self, state, value):
         current_bookmark = self.get_bookmark(state)
@@ -73,13 +62,11 @@ class Stream():
             return False
         return utils.strptime_with_tz(value) > utils.strptime_with_tz(current_bookmark)
 
-
     def load_schema(self):
         schema_file = "schemas/{}.json".format(self.name)
         with open(get_abs_path(schema_file)) as f:
             schema = json.load(f)
         return schema
-
 
     def load_metadata(self):
         schema = self.load_schema()
@@ -99,10 +86,8 @@ class Stream():
 
         return metadata.to_list(mdata)
 
-
     def is_selected(self):
         return self.stream is not None
-
 
     # The main sync function.
     def sync(self, state):
@@ -125,73 +110,72 @@ class Stream():
                 yield (self.stream, item)
 
         else:
-            raise Exception('Replication key not defined for {stream}'.format(self.name))
+            raise Exception('Replication key not defined for {}'.format(self.name))
 
         # After the sync, then set the bookmark based off session_bookmark.
         self.update_bookmark_if_old(state, self.session_bookmark)
-        
+
 
 class Workspaces(Stream):
     name = "workspaces"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class Clients(Stream):
     name = "clients"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class Groups(Stream):
     name = "groups"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "group_id" ]
+    key_properties = ["group_id"]
 
 
 class Projects(Stream):
     name = "projects"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class Tasks(Stream):
     name = "tasks"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class Tags(Stream):
     name = "tags"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class Users(Stream):
     name = "users"
     replication_method = "FULL_TABLE"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class WorkspaceUsers(Stream):
     name = "workspace_users"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = [ "id" ]
+    key_properties = ["id"]
 
 
 class TimeEntries(Stream):
     name = "time_entries"
     replication_method = "INCREMENTAL"
     replication_key = "updated"
-    key_properties = [ "id" ]
-
+    key_properties = ["id"]
 
 
 STREAMS = {
@@ -205,9 +189,3 @@ STREAMS = {
     "workspace_users": WorkspaceUsers,
     "time_entries": TimeEntries
 }
-
-
-
-
-
-
