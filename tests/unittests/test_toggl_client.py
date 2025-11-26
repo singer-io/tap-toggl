@@ -6,12 +6,12 @@ import requests
 from tap_toggl.toggl import Toggl
 
 
-class TestToggleClient(unittest.TestCase):
+class TestTogglClient(unittest.TestCase):
 
     @patch('tap_toggl.toggl.requests.get')
-    def test_toggle_max_retries_exceeded(self, mock_requests_get):
+    def test_toggl_max_retries_exceeded(self, mock_requests_get):
         """Test that the Toggl client retries the request on failure."""
-        # Mock to always raise HTTPError 503
+        # Mock to always raise RequestException
         mock_response = MagicMock()
         mock_response.status_code = 503
         mock_response.raise_for_status.side_effect = requests.exceptions.RequestException()
