@@ -1,13 +1,10 @@
-
-# 
+#
 # Module dependencies.
-# 
+#
 
-import json
 import singer
 import singer.metrics as metrics
-from singer import metadata
-from singer import Transformer
+from singer import Transformer, metadata
 
 logger = singer.get_logger()
 
