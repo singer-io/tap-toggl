@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+orbs:
+  slack: circleci/slack@3.4.2
 jobs:
   build:
     docker:
@@ -12,20 +14,26 @@ jobs:
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
             uv pip install .[dev]
       - run:
+          name: 'pylint'
+          command: |
+            source /usr/local/share/virtualenvs/tap-toggl/bin/activate
+            pylint tap_toggl -d C,R,W
+      - run:
           name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-toggl/bin/activate
-            uv pip install pytest
-            pytest tests/unittests
+            uv pip install nose coverage
+            nosetests --with-coverage --cover-erase --cover-package=tap_toggl --cover-html-dir=htmlcov tests/unittests
+            coverage html
       - add_ssh_keys
       - run:
           name: 'Integration Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-tester/bin/activate
             uv pip install --upgrade awscli
-            aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/sandbox dev_env.sh
+            aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/tap_tester_sandbox dev_env.sh
             source dev_env.sh
-            run-test --tap=tap-toggl tests/test_toggl.py
+            run-test --tap=tap-toggl tests
 workflows:
   version: 2
   commit:

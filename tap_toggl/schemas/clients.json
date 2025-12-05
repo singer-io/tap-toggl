@@ -16,6 +16,12 @@
         "integer"
       ]
     },
+    "archived": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
     "name": {
       "type": [
         "null",
@@ -35,16 +41,46 @@
         "string"
       ]
     },
-    "hrate": {
+    "creator_id": {
       "type": [
         "null",
         "integer"
       ]
     },
-    "cur": {
+    "external_reference": {
       "type": [
         "null",
         "string"
+      ]
+    },
+    "integration_ext_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_ext_type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "integration_provider": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "permissions": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "total_count": {
+      "type": [
+        "null",
+        "integer"
       ]
     }
   }

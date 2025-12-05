@@ -1,6 +1,8 @@
 # Changelog
 
-## 1.0.4
+
+## 2.0.0
+  * API Version Upgrade to V9
   * Bump dependency versions for twistlock compliance
   * Update circleci and test config to fix build
   * [#23](https://github.com/singer-io/tap-toggl/pull/23)
