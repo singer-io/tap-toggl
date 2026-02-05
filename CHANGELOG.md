@@ -1,8 +1,7 @@
 # Changelog
 
-## 2.0.1
+## 2.1.0
   * Bump dependency versions for twistlock compliance [#37](https://github.com/singer-io/tap-toggl/pull/37)
-
 
 ## 2.0.0
   * API Version Upgrade to V9
