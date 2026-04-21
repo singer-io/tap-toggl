@@ -134,7 +134,7 @@ class Groups(Stream):
     name = "groups"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = ["group_id"]
+    key_properties = [ "group_id" ]
 
 
 class Projects(Stream):
@@ -155,13 +155,13 @@ class Tags(Stream):
     name = "tags"
     replication_method = "INCREMENTAL"
     replication_key = "at"
-    key_properties = ["id"]
+    key_properties = [ "id" ]
 
 
 class Users(Stream):
     name = "users"
     replication_method = "FULL_TABLE"
-    key_properties = ["id"]
+    key_properties = [ "id" ]
 
 
 class WorkspaceUsers(Stream):
