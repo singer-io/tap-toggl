@@ -3,6 +3,7 @@
 #
 
 import logging
+import time
 from datetime import datetime, timedelta
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
@@ -17,8 +18,14 @@ API_VERSION = "v9"
 logger = logging.getLogger()
 
 
+class TogglQuotaExceededError(requests.exceptions.HTTPError):
+    """Raised when Toggl returns 402 due to API quota exhaustion (sliding window)."""
+
+
 class Toggl(object):
     """ Simple wrapper for Toggl. """
+
+    request_count = 0  # Track total API requests for quota debugging
 
     def __init__(self, api_token=None, start_date=None, user_agent=None, trailing_days=1):
         self.api_token = api_token
@@ -64,12 +71,42 @@ class Toggl(object):
         return updated_url
 
     @backoff.on_exception(backoff.expo,
-                          requests.exceptions.RequestException,
+                          (requests.exceptions.RequestException, TogglQuotaExceededError),
                           max_tries=5,
                           giveup=request_too_large)
     def _get(self, url, **kwargs):
-        logger.info("Hitting {url}".format(url=url))
+        Toggl.request_count += 1
+        logger.info("Request #%d: Hitting %s", Toggl.request_count, url)
         response = requests.get(url, auth=HTTPBasicAuth(self.api_token, 'api_token'))
+
+        # Log quota headers when present
+        quota_remaining = response.headers.get('X-Toggl-Quota-Remaining')
+        quota_resets_in = response.headers.get('X-Toggl-Quota-Resets-In')
+        if quota_remaining is not None:
+            logger.info("Quota remaining: %s, resets in: %ss", quota_remaining, quota_resets_in)
+
+        # Handle 402: distinguish quota exhaustion vs feature restriction
+        if response.status_code == 402:
+            if quota_remaining is not None or quota_resets_in is not None:
+                # Quota exhaustion — wait for reset then retry
+                wait_seconds = int(quota_resets_in) if quota_resets_in else 60
+                logger.warning(
+                    'API quota exceeded (402) after %d requests. '
+                    'Quota remaining: %s. Waiting %d seconds for reset.',
+                    Toggl.request_count, quota_remaining, wait_seconds
+                )
+                time.sleep(wait_seconds)
+                raise TogglQuotaExceededError(
+                    f'402 Quota Exceeded for url: {url}', response=response
+                )
+            else:
+                # Feature restriction — fail fast, do not retry
+                logger.critical(
+                    '402 Payment Required for url: %s — '
+                    'no quota headers found; this endpoint may require a higher plan.', url
+                )
+                response.raise_for_status()
+
         response.raise_for_status()
         return response.json()
 

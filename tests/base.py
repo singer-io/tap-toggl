@@ -22,12 +22,6 @@ class TogglBaseTest(BaseCase):
         """The expected url route ending."""
         return "platform.toggl"
 
-    def setUp(self):
-        """Checking required environment variables."""
-        missing = [v for v in ["TAP_TOGGL_API_TOKEN"] if not os.getenv(v)]
-        if missing:
-            raise Exception(f"Missing required environment variables: {missing}")
-
     def get_properties(self, original: bool = True):
         """Configuration of properties required for the tap."""
         return_value = {

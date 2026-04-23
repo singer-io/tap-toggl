@@ -5,7 +5,8 @@ from tap_tester import connections, menagerie, runner
 class TogglCanaryTest(TogglBaseTest):
     """Test tap discovery mode and sync mode"""
 
-    def name(self):
+    @staticmethod
+    def name():
         return "tap_tester_toggl_canary_test"
 
     def test_run(self):

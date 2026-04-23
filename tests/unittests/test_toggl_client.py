@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from tap_toggl.toggl import Toggl, BASE_URL, API_VERSION
+from tap_toggl.toggl import Toggl, TogglQuotaExceededError, BASE_URL, API_VERSION
 
 
 def _make_toggl_with_mocked_init(mock_get_fn):
@@ -13,6 +13,8 @@ def _make_toggl_with_mocked_init(mock_get_fn):
         {"id": 11, "organization_id": 22}
     ]
     workspace_response.raise_for_status = MagicMock()
+    workspace_response.status_code = 200
+    workspace_response.headers = {}
     mock_get_fn.return_value = workspace_response
     return Toggl(api_token="test_token", start_date="2020-01-01", user_agent="test_agent")
 
@@ -77,10 +79,109 @@ class TestRequestTooLarge(unittest.TestCase):
         err.response = mock_response
         self.assertFalse(Toggl.request_too_large(err))
 
+    def test_402_http_error_returns_false(self):
+        """HTTPError with status_code 402 returns False (quota exceeded, should retry)."""
+        mock_response = MagicMock()
+        mock_response.status_code = 402
+        err = requests.exceptions.HTTPError(response=mock_response)
+        err.response = mock_response
+        self.assertFalse(Toggl.request_too_large(err))
+
+    def test_404_http_error_returns_false(self):
+        """HTTPError with status_code 404 returns False (should retry)."""
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        err = requests.exceptions.HTTPError(response=mock_response)
+        err.response = mock_response
+        self.assertFalse(Toggl.request_too_large(err))
+
+    def test_429_http_error_returns_false(self):
+        """HTTPError with status_code 429 returns False (rate limit, should retry)."""
+        mock_response = MagicMock()
+        mock_response.status_code = 429
+        err = requests.exceptions.HTTPError(response=mock_response)
+        err.response = mock_response
+        self.assertFalse(Toggl.request_too_large(err))
+
     def test_non_http_error_returns_false(self):
         """Non-HTTPError exceptions return False."""
         err = requests.exceptions.ConnectionError("timeout")
         self.assertFalse(Toggl.request_too_large(err))
+
+
+class TestQuotaHandling(unittest.TestCase):
+    """Tests for 402 handling: quota vs feature restriction."""
+
+    @patch('tap_toggl.toggl.time.sleep')
+    @patch('tap_toggl.toggl.requests.get')
+    def test_402_with_quota_headers_waits_and_retries(self, mock_get, mock_sleep):
+        """402 with X-Toggl-Quota-Resets-In header sleeps then raises for retry."""
+        client = _make_toggl_with_mocked_init(mock_get)
+
+        quota_response = MagicMock()
+        quota_response.status_code = 402
+        quota_response.headers = {
+            'X-Toggl-Quota-Remaining': '0',
+            'X-Toggl-Quota-Resets-In': '120',
+        }
+        mock_get.return_value = quota_response
+
+        with self.assertRaises(TogglQuotaExceededError):
+            client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
+
+        mock_sleep.assert_called_once_with(120)
+
+    @patch('tap_toggl.toggl.time.sleep')
+    @patch('tap_toggl.toggl.requests.get')
+    def test_402_with_quota_remaining_only_defaults_60s(self, mock_get, mock_sleep):
+        """402 with X-Toggl-Quota-Remaining but no Resets-In defaults to 60s."""
+        client = _make_toggl_with_mocked_init(mock_get)
+
+        quota_response = MagicMock()
+        quota_response.status_code = 402
+        quota_response.headers = {'X-Toggl-Quota-Remaining': '0'}
+        mock_get.return_value = quota_response
+
+        with self.assertRaises(TogglQuotaExceededError):
+            client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
+
+        mock_sleep.assert_called_once_with(60)
+
+    @patch('tap_toggl.toggl.requests.get')
+    def test_402_without_quota_headers_fails_fast(self, mock_get):
+        """402 without quota headers raises HTTPError immediately (feature restriction)."""
+        client = _make_toggl_with_mocked_init(mock_get)
+
+        feature_response = MagicMock()
+        feature_response.status_code = 402
+        feature_response.headers = {}
+        feature_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+            '402 Payment Required', response=feature_response
+        )
+        mock_get.return_value = feature_response
+
+        with self.assertRaises(requests.exceptions.HTTPError):
+            client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
+
+
+class TestRequestCounter(unittest.TestCase):
+    """Tests for the request_count tracking."""
+
+    @patch('tap_toggl.toggl.requests.get')
+    def test_request_count_increments(self, mock_get):
+        """Each _get call increments the class-level request counter."""
+        client = _make_toggl_with_mocked_init(mock_get)
+        count_before = Toggl.request_count
+
+        ok_response = MagicMock()
+        ok_response.status_code = 200
+        ok_response.headers = {}
+        ok_response.json.return_value = [{"id": 1}]
+        ok_response.raise_for_status = MagicMock()
+        mock_get.return_value = ok_response
+
+        client._get('https://api.track.toggl.com/api/v9/test')
+        self.assertEqual(Toggl.request_count, count_before + 1)
 
 
 class TestEndpointHelpers(unittest.TestCase):
