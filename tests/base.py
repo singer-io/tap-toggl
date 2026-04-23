@@ -10,7 +10,7 @@ class TogglBaseTest(BaseCase):
     in tap-tester tests. Shared tap-specific methods (as needed).
     """
 
-    start_date = "2023-12-01T00:00:00Z"
+    start_date = "2026-03-01T00:00:00Z"
 
     @staticmethod
     def tap_name():
@@ -25,7 +25,7 @@ class TogglBaseTest(BaseCase):
     def get_properties(self, original: bool = True):
         """Configuration of properties required for the tap."""
         return_value = {
-            "start_date": "2023-12-01T00:00:00Z",
+            "start_date": "2026-03-01T00:00:00Z",
             "detailed_report_trailing_days": 1,
         }
 

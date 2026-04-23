@@ -17,8 +17,8 @@ class TogglStartDateTest(StartDateTest, TogglBaseTest):
 
     @property
     def start_date_1(self):
-        return "2019-01-01T00:00:00Z"
+        return "2026-03-01T00:00:00Z"
 
     @property
     def start_date_2(self):
-        return "2023-01-01T00:00:00Z"
+        return "2026-04-11T00:00:00Z"
