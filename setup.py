@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='tap-toggl',
       version='2.1.0',
@@ -18,13 +18,15 @@ setup(name='tap-toggl',
         "dev": [
             "pylint",
             "ipdb",
+            "pytest",
+            "coverage"
         ]
     },
       entry_points='''
           [console_scripts]
           tap-toggl=tap_toggl:main
       ''',
-      packages=['tap_toggl'],
+      packages=find_packages(),
       package_data = {
           "schemas": ["tap_toggl/schemas/*.json"]
       },
