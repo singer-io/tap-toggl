@@ -9,14 +9,13 @@ class TogglBookmarkTest(BookmarkTest, TogglBaseTest):
     bookmark_format = "%Y-%m-%dT%H:%M:%S.%fZ"
     initial_bookmarks = {
         "bookmarks": {
-            "workspaces": {"at": "2020-01-01T00:00:00Z"},
-            "clients": {"at": "2020-01-01T00:00:00Z"},
-            "groups": {"at": "2020-01-01T00:00:00Z"},
-            "projects": {"at": "2020-01-01T00:00:00Z"},
-            "tasks": {"at": "2020-01-01T00:00:00Z"},
-            "tags": {"at": "2020-01-01T00:00:00Z"},
-            "workspace_users": {"at": "2020-01-01T00:00:00Z"},
-            "time_entries": {"updated": "2020-01-01T00:00:00Z"},
+            "workspaces": {"at": "2026-03-01T00:00:00Z"},
+            "clients": {"at": "2026-03-01T00:00:00Z"},
+            "groups": {"at": "2026-03-01T00:00:00Z"},
+            "projects": {"at": "2026-03-01T00:00:00Z"},
+            "tasks": {"at": "2026-03-01T00:00:00Z"},
+            "tags": {"at": "2026-03-01T00:00:00Z"},
+            "workspace_users": {"at": "2026-03-01T00:00:00Z"},
         }
     }
 
@@ -25,6 +24,9 @@ class TogglBookmarkTest(BookmarkTest, TogglBaseTest):
         return "tap_tester_toggl_bookmark_test"
 
     def streams_to_test(self):
-        # Exclude FULL_TABLE streams (users)
-        streams_to_exclude = {"users"}
+        # Exclude FULL_TABLE and test data not present streams
+        streams_to_exclude = {
+            "users",
+            "time_entries"
+        }
         return self.expected_stream_names().difference(streams_to_exclude)

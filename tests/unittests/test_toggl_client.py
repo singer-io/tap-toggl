@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from tap_toggl.toggl import Toggl, TogglQuotaExceededError, BASE_URL, API_VERSION
+from tap_toggl.toggl import Toggl, TogglQuotaExceededError
 
 
 def _make_toggl_with_mocked_init(mock_get_fn):
@@ -110,12 +110,12 @@ class TestRequestTooLarge(unittest.TestCase):
 
 
 class TestQuotaHandling(unittest.TestCase):
-    """Tests for 402 handling: quota vs feature restriction."""
+    """Tests for 402 handling: sleep+retry if wait <= MAX, fail otherwise."""
 
     @patch('tap_toggl.toggl.time.sleep')
     @patch('tap_toggl.toggl.requests.get')
-    def test_402_with_quota_headers_waits_and_retries(self, mock_get, mock_sleep):
-        """402 with X-Toggl-Quota-Resets-In header sleeps then raises for retry."""
+    def test_402_short_wait_sleeps_and_raises_for_retry(self, mock_get, mock_sleep):
+        """402 with reset time <= MAX_QUOTA_WAIT_SECONDS sleeps in chunks then raises."""
         client = _make_toggl_with_mocked_init(mock_get)
 
         quota_response = MagicMock()
@@ -129,12 +129,34 @@ class TestQuotaHandling(unittest.TestCase):
         with self.assertRaises(TogglQuotaExceededError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
-        mock_sleep.assert_called_once_with(120)
+        # Sleep in 60s chunks: 60 + 60 = 120
+        self.assertEqual(mock_sleep.call_count, 2)
+        total_slept = sum(call.args[0] for call in mock_sleep.call_args_list)
+        self.assertEqual(total_slept, 120)
 
     @patch('tap_toggl.toggl.time.sleep')
     @patch('tap_toggl.toggl.requests.get')
-    def test_402_with_quota_remaining_only_defaults_60s(self, mock_get, mock_sleep):
-        """402 with X-Toggl-Quota-Remaining but no Resets-In defaults to 60s."""
+    def test_402_long_wait_fails_fast_no_sleep(self, mock_get, mock_sleep):
+        """402 with reset time > MAX_QUOTA_WAIT_SECONDS raises without sleeping."""
+        client = _make_toggl_with_mocked_init(mock_get)
+
+        quota_response = MagicMock()
+        quota_response.status_code = 402
+        quota_response.headers = {
+            'X-Toggl-Quota-Remaining': '0',
+            'X-Toggl-Quota-Resets-In': '2818',
+        }
+        mock_get.return_value = quota_response
+
+        with self.assertRaises(TogglQuotaExceededError):
+            client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
+
+        mock_sleep.assert_not_called()
+
+    @patch('tap_toggl.toggl.time.sleep')
+    @patch('tap_toggl.toggl.requests.get')
+    def test_402_no_resets_in_header_defaults_60s(self, mock_get, mock_sleep):
+        """402 with quota remaining but no resets-in defaults to 60s (within cap)."""
         client = _make_toggl_with_mocked_init(mock_get)
 
         quota_response = MagicMock()
@@ -148,19 +170,16 @@ class TestQuotaHandling(unittest.TestCase):
         mock_sleep.assert_called_once_with(60)
 
     @patch('tap_toggl.toggl.requests.get')
-    def test_402_without_quota_headers_fails_fast(self, mock_get):
-        """402 without quota headers raises HTTPError immediately (feature restriction)."""
+    def test_402_without_quota_headers_raises_immediately(self, mock_get):
+        """402 without quota headers raises TogglQuotaExceededError (feature restriction)."""
         client = _make_toggl_with_mocked_init(mock_get)
 
         feature_response = MagicMock()
         feature_response.status_code = 402
         feature_response.headers = {}
-        feature_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
-            '402 Payment Required', response=feature_response
-        )
         mock_get.return_value = feature_response
 
-        with self.assertRaises(requests.exceptions.HTTPError):
+        with self.assertRaises(TogglQuotaExceededError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
 

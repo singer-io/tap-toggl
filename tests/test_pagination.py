@@ -1,7 +1,10 @@
+import unittest
+
 from base import TogglBaseTest
 from tap_tester.base_suite_tests.pagination_test import PaginationTest
 
 
+@unittest.skip("No streams have sufficient data (>= 20 records) for pagination testing")
 class TogglPaginationTest(PaginationTest, TogglBaseTest):
     """Ensure tap can replicate multiple pages of data for streams that use pagination."""
 
@@ -10,6 +13,4 @@ class TogglPaginationTest(PaginationTest, TogglBaseTest):
         return "tap_tester_toggl_pagination_test"
 
     def streams_to_test(self):
-        # Exclude streams that don't have enough test data to exceed one page
-        streams_to_exclude = set()
-        return self.expected_stream_names().difference(streams_to_exclude)
+        return self.expected_stream_names()

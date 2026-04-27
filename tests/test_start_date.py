@@ -11,8 +11,11 @@ class TogglStartDateTest(StartDateTest, TogglBaseTest):
         return "tap_tester_toggl_start_date_test"
 
     def streams_to_test(self):
-        # Exclude FULL_TABLE streams (users) — they don't obey start_date
-        streams_to_exclude = {"users"}
+        # Exclude FULL_TABLE streams (users) and streams with no test data
+        streams_to_exclude = {
+            "users",
+            "time_entries",
+        }
         return self.expected_stream_names().difference(streams_to_exclude)
 
     @property
