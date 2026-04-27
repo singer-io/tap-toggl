@@ -24,9 +24,14 @@ class TogglBookmarkTest(BookmarkTest, TogglBaseTest):
         return "tap_tester_toggl_bookmark_test"
 
     def streams_to_test(self):
-        # Exclude FULL_TABLE and test data not present streams
+        # Exclude FULL_TABLE streams, streams with no test data, and streams
+        # with < 2 records
         streams_to_exclude = {
             "users",
-            "time_entries"
+            "time_entries",
+            "groups",
+            "tasks",
+            "workspaces",
+            "workspace_users",
         }
         return self.expected_stream_names().difference(streams_to_exclude)

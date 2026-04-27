@@ -236,8 +236,8 @@ class TestStreamConstants(unittest.TestCase):
         self.assertEqual(Users.replication_method, "FULL_TABLE")
 
     def test_time_entries_replication_key(self):
-        """TimeEntries uses 'updated' as the replication key."""
-        self.assertEqual(TimeEntries.replication_key, "updated")
+        """TimeEntries uses 'at' as the replication key."""
+        self.assertEqual(TimeEntries.replication_key, "at")
 
 
 class TestStreamLoadSchema(unittest.TestCase):

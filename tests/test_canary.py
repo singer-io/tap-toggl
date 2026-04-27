@@ -13,7 +13,7 @@ class TogglCanaryTest(TogglBaseTest):
         """
         - Verify all streams hare synced
         """
-        streams_to_test = self.expected_streams() - {"tasks", "tags", "groups", "projects", "time_entries", "clients"}
+        streams_to_test = self.expected_stream_names() - {"tasks", "tags", "groups", "projects", "time_entries", "clients"}
 
         conn_id = connections.ensure_connection(self)
 

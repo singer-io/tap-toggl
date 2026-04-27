@@ -174,7 +174,7 @@ class WorkspaceUsers(Stream):
 class TimeEntries(Stream):
     name = "time_entries"
     replication_method = "INCREMENTAL"
-    replication_key = "updated"
+    replication_key = "at"
     key_properties = ["id"]
 
 
