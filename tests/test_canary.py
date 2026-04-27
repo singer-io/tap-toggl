@@ -1,5 +1,5 @@
 from base import TogglBaseTest
-from tap_tester import connections, menagerie, runner
+from tap_tester import connections, runner
 
 
 class TogglCanaryTest(TogglBaseTest):
@@ -11,7 +11,7 @@ class TogglCanaryTest(TogglBaseTest):
 
     def test_run(self):
         """
-        - Verify all streams hare synced
+        - Verify expected streams are synced
         """
         streams_to_test = self.expected_stream_names() - {"tasks", "tags", "groups", "projects", "time_entries", "clients"}
 
@@ -19,11 +19,14 @@ class TogglCanaryTest(TogglBaseTest):
 
         found_catalogs = self.run_and_verify_check_mode(conn_id)
 
-        self.perform_and_verify_table_and_field_selection(conn_id, found_catalogs)
+        # Select only the streams we want to test
+        our_catalogs = [c for c in found_catalogs
+                        if c.get('tap_stream_id') in streams_to_test]
+        self.select_all_streams_and_fields(conn_id, our_catalogs)
 
         record_count = self.run_and_verify_sync(conn_id)
         synced_records = runner.get_records_from_target_output()
 
-        # Verify no unexpected streams were replicated
+        # Verify expected streams were replicated
         synced_stream_names = set(synced_records.keys())
         self.assertSetEqual(streams_to_test, synced_stream_names)

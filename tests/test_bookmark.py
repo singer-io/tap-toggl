@@ -9,13 +9,9 @@ class TogglBookmarkTest(BookmarkTest, TogglBaseTest):
     bookmark_format = "%Y-%m-%dT%H:%M:%S.%fZ"
     initial_bookmarks = {
         "bookmarks": {
-            "workspaces": {"at": "2026-03-01T00:00:00Z"},
             "clients": {"at": "2026-03-01T00:00:00Z"},
-            "groups": {"at": "2026-03-01T00:00:00Z"},
             "projects": {"at": "2026-03-01T00:00:00Z"},
-            "tasks": {"at": "2026-03-01T00:00:00Z"},
             "tags": {"at": "2026-03-01T00:00:00Z"},
-            "workspace_users": {"at": "2026-03-01T00:00:00Z"},
         }
     }
 

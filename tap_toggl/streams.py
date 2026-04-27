@@ -52,6 +52,11 @@ class Stream():
 
     def update_bookmark_if_old(self, state, value):
         if self.is_bookmark_old(state, value):
+            # Normalize to consistent ISO 8601 format (%Y-%m-%dT%H:%M:%S.%fZ).
+            # The Toggl API returns timestamps in inconsistent formats across
+            # endpoints (e.g. "+00:00" vs "Z", with/without microseconds).
+            if value is not None:
+                value = utils.strftime(utils.strptime_with_tz(value))
             singer.write_bookmark(state, self.name, self.replication_key, value)
 
     def is_bookmark_old(self, state, value):

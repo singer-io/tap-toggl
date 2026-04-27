@@ -121,6 +121,39 @@ class TestStreamGetBookmark(unittest.TestCase):
         self.assertIsNone(self.stream.get_bookmark({}))
 
 
+class TestStreamBookmarkNormalization(unittest.TestCase):
+    """Tests that update_bookmark_if_old normalizes timestamps to %Y-%m-%dT%H:%M:%S.%fZ."""
+
+    def setUp(self):
+        self.stream = Stream()
+        self.stream.name = "clients"
+        self.stream.replication_key = "at"
+
+    def test_normalizes_plus_offset_to_z_format(self):
+        """Bookmark '2026-04-22T17:20:07+00:00' is normalized to '.000000Z' format."""
+        state = {}
+        self.stream.update_bookmark_if_old(state, "2026-04-22T17:20:07+00:00")
+        import singer
+        bookmark = singer.get_bookmark(state, "clients", "at")
+        self.assertEqual(bookmark, "2026-04-22T17:20:07.000000Z")
+
+    def test_normalizes_microseconds_z_format(self):
+        """Bookmark '2026-04-22T17:24:09.862844Z' is preserved in '.%fZ' format."""
+        state = {}
+        self.stream.update_bookmark_if_old(state, "2026-04-22T17:24:09.862844Z")
+        import singer
+        bookmark = singer.get_bookmark(state, "clients", "at")
+        self.assertEqual(bookmark, "2026-04-22T17:24:09.862844Z")
+
+    def test_none_value_not_normalized(self):
+        """None value is written as-is without normalization."""
+        state = {}
+        self.stream.update_bookmark_if_old(state, None)
+        import singer
+        bookmark = singer.get_bookmark(state, "clients", "at")
+        self.assertIsNone(bookmark)
+
+
 class TestStreamSyncIncremental(unittest.TestCase):
     """Tests for Stream.sync with INCREMENTAL replication."""
 
