@@ -23,7 +23,7 @@ class TogglQuotaExceededError(requests.exceptions.HTTPError):
 
 
 # Maximum seconds to wait for quota reset before failing
-MAX_QUOTA_WAIT_SECONDS = 300
+MAX_QUOTA_WAIT_SECONDS = 900
 
 
 class Toggl(object):
@@ -117,13 +117,10 @@ class Toggl(object):
                     )
             else:
                 # No quota headers — likely a feature restriction
-                logger.critical(
-                    '402 Payment Required for url: %s — '
-                    'no quota headers found; this endpoint may require a higher plan.', url
+                raise TogglQuotaExceededError(
+                    '{} {} for url: {}'.format(response.status_code, response.reason, url),
+                    response=response
                 )
-            raise TogglQuotaExceededError(
-                f'402 for url: {url}', response=response
-            )
 
         response.raise_for_status()
         return response.json()

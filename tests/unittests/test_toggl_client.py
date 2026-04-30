@@ -114,8 +114,8 @@ class TestQuotaHandling(unittest.TestCase):
 
     @patch('tap_toggl.toggl.time.sleep')
     @patch('tap_toggl.toggl.requests.get')
-    def test_402_short_wait_sleeps_and_raises_for_retry(self, mock_get, mock_sleep):
-        """402 with reset time <= MAX_QUOTA_WAIT_SECONDS sleeps in chunks then raises."""
+    def test_402_short_wait_sleeps_and_falls_through(self, mock_get, mock_sleep):
+        """402 with reset time <= MAX_QUOTA_WAIT_SECONDS sleeps in chunks then falls through to raise_for_status."""
         client = _make_toggl_with_mocked_init(mock_get)
 
         quota_response = MagicMock()
@@ -124,9 +124,12 @@ class TestQuotaHandling(unittest.TestCase):
             'X-Toggl-Quota-Remaining': '0',
             'X-Toggl-Quota-Resets-In': '120',
         }
+        quota_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+            response=quota_response
+        )
         mock_get.return_value = quota_response
 
-        with self.assertRaises(TogglQuotaExceededError):
+        with self.assertRaises(requests.exceptions.HTTPError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
         # Sleep in 60s chunks: 60 + 60 = 120
@@ -137,7 +140,7 @@ class TestQuotaHandling(unittest.TestCase):
     @patch('tap_toggl.toggl.time.sleep')
     @patch('tap_toggl.toggl.requests.get')
     def test_402_long_wait_fails_fast_no_sleep(self, mock_get, mock_sleep):
-        """402 with reset time > MAX_QUOTA_WAIT_SECONDS raises without sleeping."""
+        """402 with reset time > MAX_QUOTA_WAIT_SECONDS logs critical and falls through to raise_for_status."""
         client = _make_toggl_with_mocked_init(mock_get)
 
         quota_response = MagicMock()
@@ -146,9 +149,12 @@ class TestQuotaHandling(unittest.TestCase):
             'X-Toggl-Quota-Remaining': '0',
             'X-Toggl-Quota-Resets-In': '2818',
         }
+        quota_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+            response=quota_response
+        )
         mock_get.return_value = quota_response
 
-        with self.assertRaises(TogglQuotaExceededError):
+        with self.assertRaises(requests.exceptions.HTTPError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
         mock_sleep.assert_not_called()
@@ -162,9 +168,12 @@ class TestQuotaHandling(unittest.TestCase):
         quota_response = MagicMock()
         quota_response.status_code = 402
         quota_response.headers = {'X-Toggl-Quota-Remaining': '0'}
+        quota_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+            response=quota_response
+        )
         mock_get.return_value = quota_response
 
-        with self.assertRaises(TogglQuotaExceededError):
+        with self.assertRaises(requests.exceptions.HTTPError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
         mock_sleep.assert_called_once_with(60)
