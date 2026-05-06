@@ -12,17 +12,18 @@ import requests
 from requests.auth import HTTPBasicAuth
 from singer import utils
 
+from tap_toggl.exceptions import (
+    TogglFeatureNotAvailableError,
+    TogglQuotaExceededError,
+    TogglRateLimitError,
+)
+
 BASE_URL = "https://api.track.toggl.com/api"
 API_VERSION = "v9"
 
 logger = logging.getLogger()
 
-
-class TogglQuotaExceededError(requests.exceptions.HTTPError):
-    """Raised when Toggl returns 402 due to API quota exhaustion."""
-
-
-# Maximum seconds to wait for quota reset before failing
+# Maximum seconds to wait for quota reset before failing fast
 MAX_QUOTA_WAIT_SECONDS = 900
 
 
@@ -75,7 +76,9 @@ class Toggl(object):
         return updated_url
 
     @backoff.on_exception(backoff.expo,
-                          (requests.exceptions.RequestException, TogglQuotaExceededError),
+                          (requests.exceptions.RequestException,
+                           TogglQuotaExceededError,
+                           TogglRateLimitError),
                           max_tries=5,
                           giveup=request_too_large)
     def _get(self, url, **kwargs):
@@ -83,42 +86,55 @@ class Toggl(object):
         logger.info("Request #%d: Hitting %s", Toggl.request_count, url)
         response = requests.get(url, auth=HTTPBasicAuth(self.api_token, 'api_token'))
 
+        if response.status_code == 429:
+            logger.warning('Rate limited (429) after %d requests. Backing off.', Toggl.request_count)
+            raise TogglRateLimitError(
+                f"{response.status_code} {response.reason} for url: {url}",
+                response=response
+            )
+
         # Log quota headers when present
         quota_remaining = response.headers.get('X-Toggl-Quota-Remaining')
         quota_resets_in = response.headers.get('X-Toggl-Quota-Resets-In')
         if quota_remaining is not None:
             logger.info("Quota remaining: %s, resets in: %ss", quota_remaining, quota_resets_in)
 
-        # Handle 402: quota exhaustion vs feature restriction
+        # Handle 402 — Toggl uses this for two distinct cases:
+        # 1. Quota exhaustion (headers present): sliding-window limit reached.
+        #    Wait up to MAX_QUOTA_WAIT_SECONDS, then raise TogglQuotaExceededError so @backoff retries.
+        #    If reset time exceeds MAX_QUOTA_WAIT_SECONDS, fail fast (CI safety).
+        # 2. Feature restriction (no headers): endpoint needs a higher plan.
+        #    Raise TogglFeatureNotAvailableError — non-retryable, do not repeat the request.
         if response.status_code == 402:
             if quota_remaining is not None or quota_resets_in is not None:
                 wait_seconds = int(quota_resets_in) if quota_resets_in else 60
                 if wait_seconds <= MAX_QUOTA_WAIT_SECONDS:
-                    # Short wait — sleep in 60s chunks and retry
                     logger.warning(
                         'API quota exceeded (402) after %d requests. '
                         'Quota remaining: %s. Waiting %d seconds for reset.',
                         Toggl.request_count, quota_remaining, wait_seconds
                     )
+                    # Log every 5 mins so CircleCI doesn't kill the build for inactivity
                     elapsed = 0
                     while elapsed < wait_seconds:
-                        chunk = min(60, wait_seconds - elapsed)
+                        chunk = min(300, wait_seconds - elapsed)
                         time.sleep(chunk)
                         elapsed += chunk
                         logger.info('Quota wait: %d/%d seconds elapsed...', elapsed, wait_seconds)
+                    raise TogglQuotaExceededError(
+                        f"{response.status_code} {response.reason} for url: {url}",
+                        response=response
+                    )
                 else:
-                    # Long wait — fail fast to avoid CI timeout
-                    logger.critical(
-                        'API quota exceeded (402) after %d requests. '
-                        'Quota remaining: %s, resets in: %ss. '
-                        'Exceeds max wait (%ds) — failing fast.',
-                        Toggl.request_count, quota_remaining, quota_resets_in,
-                        MAX_QUOTA_WAIT_SECONDS
+                    raise TogglFeatureNotAvailableError(
+                        f"Quota resets in {wait_seconds}s which exceeds max wait "
+                        f"({MAX_QUOTA_WAIT_SECONDS}s). Failing fast for url: {url}",
+                        response=response
                     )
             else:
-                # No quota headers — likely a feature restriction
-                raise TogglQuotaExceededError(
-                    '{} {} for url: {}'.format(response.status_code, response.reason, url),
+                # No quota headers — plan restriction, do not retry
+                raise TogglFeatureNotAvailableError(
+                    f"{response.status_code} {response.reason} for url: {url}",
                     response=response
                 )
 
