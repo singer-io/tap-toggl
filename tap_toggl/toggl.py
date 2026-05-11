@@ -3,7 +3,6 @@
 #
 
 import logging
-import time
 from datetime import datetime, timedelta
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
@@ -15,6 +14,7 @@ from singer import utils
 from tap_toggl.exceptions import (
     TogglFeatureNotAvailableError,
     TogglQuotaExceededError,
+    TogglQuotaWaitTooLongError,
     TogglRateLimitError,
 )
 
@@ -25,6 +25,15 @@ logger = logging.getLogger()
 
 # Maximum seconds to wait for quota reset before failing fast
 MAX_QUOTA_WAIT_SECONDS = 900
+
+def _on_backoff(details):
+    """Log before each backoff sleep so CircleCI console stays alive."""
+    exc = details.get("exception")
+    wait = details.get("wait", 0)
+    logger.warning(
+        "Backing off for %ds before retry %d due to %s: %s",
+        int(wait), details["tries"], type(exc).__name__, exc
+    )
 
 
 class Toggl(object):
@@ -75,12 +84,18 @@ class Toggl(object):
 
         return updated_url
 
+    @backoff.on_exception(backoff.runtime,
+                          TogglQuotaExceededError,
+                          value=lambda e: e.retry_after,
+                          max_tries=5,
+                          on_backoff=_on_backoff,
+                        )
     @backoff.on_exception(backoff.expo,
                           (requests.exceptions.RequestException,
-                           TogglQuotaExceededError,
                            TogglRateLimitError),
                           max_tries=5,
-                          giveup=request_too_large)
+                          giveup=request_too_large,
+                          on_backoff=_on_backoff)
     def _get(self, url, **kwargs):
         Toggl.request_count += 1
         logger.info("Request #%d: Hitting %s", Toggl.request_count, url)
@@ -111,32 +126,25 @@ class Toggl(object):
                 if wait_seconds <= MAX_QUOTA_WAIT_SECONDS:
                     logger.warning(
                         'API quota exceeded (402) after %d requests. '
-                        'Quota remaining: %s. Waiting %d seconds for reset.',
+                        'Quota remaining: %s. Retrying in %d seconds.',
                         Toggl.request_count, quota_remaining, wait_seconds
                     )
-                    # Log every 5 mins so CircleCI doesn't kill the build for inactivity
-                    elapsed = 0
-                    while elapsed < wait_seconds:
-                        chunk = min(300, wait_seconds - elapsed)
-                        time.sleep(chunk)
-                        elapsed += chunk
-                        logger.info('Quota wait: %d/%d seconds elapsed...', elapsed, wait_seconds)
+                    # backoff.runtime uses retry_after to delay the retry.
                     raise TogglQuotaExceededError(
                         f"{response.status_code} {response.reason} for url: {url}",
+                        retry_after=wait_seconds,
                         response=response
                     )
-                else:
-                    raise TogglFeatureNotAvailableError(
-                        f"Quota resets in {wait_seconds}s which exceeds max wait "
-                        f"({MAX_QUOTA_WAIT_SECONDS}s). Failing fast for url: {url}",
-                        response=response
-                    )
-            else:
-                # No quota headers — plan restriction, do not retry
-                raise TogglFeatureNotAvailableError(
-                    f"{response.status_code} {response.reason} for url: {url}",
+                raise TogglQuotaWaitTooLongError(
+                    f"Quota resets in {wait_seconds}s which exceeds max wait "
+                    f"({MAX_QUOTA_WAIT_SECONDS}s). Failing fast for url: {url}",
                     response=response
                 )
+            # No quota headers — plan restriction, do not retry
+            raise TogglFeatureNotAvailableError(
+                f"{response.status_code} {response.reason} for url: {url}",
+                response=response
+            )
 
         response.raise_for_status()
         return response.json()
