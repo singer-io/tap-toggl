@@ -27,7 +27,7 @@ def _make_toggl_with_mocked_init(mock_get_fn):
 
 class TestTogglClient(unittest.TestCase):
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_toggl_max_retries_exceeded(self, mock_requests_get):
         """Test that the Toggl client retries the request on failure."""
         # Mock to always raise RequestException
@@ -47,19 +47,19 @@ class TestTogglClient(unittest.TestCase):
 class TestTogglInit(unittest.TestCase):
     """Tests for Toggl.__init__ and workspace/org ID population."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_workspace_ids_populated(self, mock_get):
         """workspace_ids are populated from the initial workspaces call."""
         client = _make_toggl_with_mocked_init(mock_get)
         self.assertEqual(client.workspace_ids, [11])
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_organization_ids_populated(self, mock_get):
         """organization_ids are populated from the initial workspaces call."""
         client = _make_toggl_with_mocked_init(mock_get)
         self.assertEqual(client.organization_ids, [22])
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_api_token_stored(self, mock_get):
         """api_token is stored on the client object."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -118,7 +118,7 @@ class TestRequestTooLarge(unittest.TestCase):
 class TestQuotaHandling(unittest.TestCase):
     """Tests for 402 handling: backoff retries with retry_after if wait <= MAX, fail fast otherwise."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_402_short_wait_raises_with_retry_after(self, mock_get):
         """402 with reset time <= MAX_QUOTA_WAIT_SECONDS raises TogglQuotaExceededError with retry_after set."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -137,7 +137,7 @@ class TestQuotaHandling(unittest.TestCase):
         # retry_after is set so backoff.runtime knows how long to sleep
         self.assertEqual(ctx.exception.retry_after, 120)
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_402_long_wait_fails_fast_no_sleep(self, mock_get):
         """402 with reset time > MAX_QUOTA_WAIT_SECONDS raises TogglQuotaWaitTooLongError immediately (non-retryable)."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -153,7 +153,7 @@ class TestQuotaHandling(unittest.TestCase):
         with self.assertRaises(TogglQuotaWaitTooLongError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_402_no_resets_in_header_defaults_60s(self, mock_get):
         """402 with quota remaining but no resets-in defaults retry_after to 60s."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -168,7 +168,7 @@ class TestQuotaHandling(unittest.TestCase):
 
         self.assertEqual(ctx.exception.retry_after, 60)
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_402_without_quota_headers_raises_feature_error(self, mock_get):
         """402 without quota headers raises TogglFeatureNotAvailableError (plan restriction, non-retryable)."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -181,7 +181,7 @@ class TestQuotaHandling(unittest.TestCase):
         with self.assertRaises(TogglFeatureNotAvailableError):
             client._get.__wrapped__(client, 'https://api.track.toggl.com/api/v9/test')
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_429_raises_rate_limit_error(self, mock_get):
         """429 raises TogglRateLimitError so @backoff retries with exponential delay."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -198,7 +198,7 @@ class TestQuotaHandling(unittest.TestCase):
 class TestRequestCounter(unittest.TestCase):
     """Tests for the request_count tracking."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_request_count_increments(self, mock_get):
         """Each _get call increments the class-level request counter."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -218,21 +218,21 @@ class TestRequestCounter(unittest.TestCase):
 class TestEndpointHelpers(unittest.TestCase):
     """Tests for workspace and organization endpoint builder methods."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_get_workspace_endpoints(self, mock_get):
         """_get_workspace_endpoints expands {workspace_id} for each id."""
         client = _make_toggl_with_mocked_init(mock_get)
         endpoints = client._get_workspace_endpoints("https://api.example.com/{workspace_id}/data")
         self.assertEqual(endpoints, ["https://api.example.com/11/data"])
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_get_organization_endpoints(self, mock_get):
         """_get_organization_endpoints expands {organization_id} for each id."""
         client = _make_toggl_with_mocked_init(mock_get)
         endpoints = client._get_organization_endpoints("https://api.example.com/{organization_id}/groups")
         self.assertEqual(endpoints, ["https://api.example.com/22/groups"])
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_paginate_endpoint_adds_page_param(self, mock_get):
         """_paginate_endpoint appends page=N query parameter."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -240,7 +240,7 @@ class TestEndpointHelpers(unittest.TestCase):
         paginated = client._paginate_endpoint(url, page=3)
         self.assertIn("page=3", paginated)
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_paginate_endpoint_updates_existing_page(self, mock_get):
         """_paginate_endpoint replaces an existing page parameter."""
         client = _make_toggl_with_mocked_init(mock_get)
@@ -253,7 +253,7 @@ class TestEndpointHelpers(unittest.TestCase):
 class TestTogglGetResponse(unittest.TestCase):
     """Tests for Toggl._get_response."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_non_paginated_yields_items(self, mock_get):
         """_get_response without key yields all items from the response list."""
         records = [{"id": 1}, {"id": 2}]
@@ -271,7 +271,7 @@ class TestTogglGetResponse(unittest.TestCase):
         result = list(client._get_response("https://api.example.com/items"))
         self.assertEqual(result, records)
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_paginated_yields_items_then_stops(self, mock_get):
         """_get_response with key='data' paginates until empty data returned."""
         init_response = MagicMock()
@@ -298,7 +298,7 @@ class TestTogglGetResponse(unittest.TestCase):
 class TestTogglIsAuthorized(unittest.TestCase):
     """Tests for Toggl.is_authorized."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_is_authorized_calls_me_endpoint(self, mock_get):
         """is_authorized calls the /me endpoint."""
         init_response = MagicMock()
@@ -321,7 +321,7 @@ class TestTogglIsAuthorized(unittest.TestCase):
 class TestTogglWorkspaces(unittest.TestCase):
     """Tests for Toggl.workspaces() method."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_workspaces_yields_all_items(self, mock_get):
         """workspaces() yields each workspace dict."""
         workspace_data = [{"id": 11, "organization_id": 22}, {"id": 33, "organization_id": 44}]
@@ -343,7 +343,7 @@ class TestTogglWorkspaces(unittest.TestCase):
 class TestTogglTimeEntries(unittest.TestCase):
     """Tests for Toggl.time_entries date range generation."""
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_time_entries_uses_bookmark(self, mock_get):
         """time_entries uses bookmark to calculate start_date with trailing_days offset."""
         call_count = [0]
@@ -364,7 +364,7 @@ class TestTogglTimeEntries(unittest.TestCase):
         result = list(client.time_entries(bookmark="2020-06-01T00:00:00Z"))
         self.assertIsInstance(result, list)
 
-    @patch('tap_toggl.toggl.requests.get')
+    @patch('requests.Session.get')
     def test_time_entries_no_bookmark_uses_start_date(self, mock_get):
         """time_entries falls back to start_date when no bookmark is provided."""
         call_count = [0]

@@ -24,7 +24,24 @@ API_VERSION = "v9"
 logger = logging.getLogger()
 
 # Maximum seconds to wait for quota reset before failing fast
-MAX_QUOTA_WAIT_SECONDS = 900
+MAX_QUOTA_WAIT_SECONDS = 300
+
+# Default request timeout in seconds
+REQUEST_TIMEOUT_SECONDS = 30
+
+
+def _backoff_wait_value(exc):
+    """Return retry delay based on exception type.
+    - TogglQuotaExceededError: honor API-provided retry_after
+    - TogglRateLimitError: 30s (API docs recommend backing off a few minutes)
+    - transient network/request errors: 5s
+    """
+    if isinstance(exc, TogglQuotaExceededError) and exc.retry_after:
+        return float(exc.retry_after)
+    if isinstance(exc, TogglRateLimitError):
+        return 30.0
+    return 5.0
+
 
 def _on_backoff(details):
     """Log before each backoff sleep so CircleCI console stays alive."""
@@ -44,6 +61,8 @@ class Toggl(object):
     def __init__(self, api_token=None, start_date=None, user_agent=None, trailing_days=1):
         self.api_token = api_token
         self.trailing_days = int(trailing_days)
+        self.session = requests.Session()
+        self.session.auth = HTTPBasicAuth(api_token, "api_token")
         self.start_date = start_date
         self.workspace_ids = []
         self.organization_ids = []
@@ -85,21 +104,18 @@ class Toggl(object):
         return updated_url
 
     @backoff.on_exception(backoff.runtime,
-                          TogglQuotaExceededError,
-                          value=lambda e: e.retry_after,
-                          max_tries=5,
-                          on_backoff=_on_backoff,
-                        )
-    @backoff.on_exception(backoff.expo,
                           (requests.exceptions.RequestException,
+                           TogglQuotaExceededError,
                            TogglRateLimitError),
+                          value=_backoff_wait_value,
                           max_tries=5,
                           giveup=request_too_large,
                           on_backoff=_on_backoff)
     def _get(self, url, **kwargs):
         Toggl.request_count += 1
+        kwargs.setdefault("timeout", REQUEST_TIMEOUT_SECONDS)
         logger.info("Request #%d: Hitting %s", Toggl.request_count, url)
-        response = requests.get(url, auth=HTTPBasicAuth(self.api_token, 'api_token'))
+        response = self.session.get(url, **kwargs)
 
         if response.status_code == 429:
             logger.warning('Rate limited (429) after %d requests. Backing off.', Toggl.request_count)
@@ -122,7 +138,10 @@ class Toggl(object):
         #    Raise TogglFeatureNotAvailableError — non-retryable, do not repeat the request.
         if response.status_code == 402:
             if quota_remaining is not None or quota_resets_in is not None:
-                wait_seconds = int(quota_resets_in) if quota_resets_in else 60
+                try:
+                    wait_seconds = int(quota_resets_in) if quota_resets_in else 60
+                except (TypeError, ValueError):
+                    wait_seconds = 60
                 if wait_seconds <= MAX_QUOTA_WAIT_SECONDS:
                     logger.warning(
                         'API quota exceeded (402) after %d requests. '
