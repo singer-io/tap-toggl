@@ -33,7 +33,7 @@ REQUEST_TIMEOUT_SECONDS = 30
 def _backoff_wait_value(exc):
     """Return retry delay based on exception type.
     - TogglQuotaExceededError: honor API-provided retry_after
-    - TogglRateLimitError: 30s (API docs recommend backing off a few minutes)
+    - TogglRateLimitError: 30s (retry quickly; backoff.runtime will escalate on repeated failures)
     - transient network/request errors: 5s
     """
     if isinstance(exc, TogglQuotaExceededError) and exc.retry_after:
@@ -141,6 +141,11 @@ class Toggl(object):
                 try:
                     wait_seconds = int(quota_resets_in) if quota_resets_in else 60
                 except (TypeError, ValueError):
+                    logger.warning(
+                        "Quota headers incomplete: remaining=%s resets_in=%s",
+                        quota_remaining,
+                        quota_resets_in,
+                    )
                     wait_seconds = 60
                 if wait_seconds <= MAX_QUOTA_WAIT_SECONDS:
                     logger.warning(
