@@ -1,8 +1,7 @@
 # Changelog
 
 ## 2.2.0
-  * Streams the credentials cannot access (403) are now excluded from the catalog during discovery instead of raising an error
-  * Added unit tests for discovery and access checks
+  * Exclude unauthorized streams (403) from catalog during discovery [#29](https://github.com/singer-io/tap-toggl/pull/29)
 
 ## 2.1.0
   * Bump dependency versions for twistlock compliance [#37](https://github.com/singer-io/tap-toggl/pull/37)

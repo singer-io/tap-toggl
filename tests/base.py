@@ -25,6 +25,7 @@ class TogglBaseTest(unittest.TestCase):
     INCREMENTAL = "INCREMENTAL"
     FULL_TABLE = "FULL_TABLE"
     OBEYS_START_DATE = "obey-start-date"
+    IS_FORBIDDEN_STREAM = "is-forbidden-stream"
 
     def expected_replication_method(self):
         """Return a dictionary with key of table name and value of replication
@@ -108,7 +109,11 @@ class TogglBaseTest(unittest.TestCase):
 
     def expected_streams(self):
         """A set of expected stream names."""
-        return set(self.expected_metadata().keys())
+        return {
+            stream_name
+            for stream_name, metadata in self.expected_metadata().items()
+            if not metadata.get(self.IS_FORBIDDEN_STREAM, False)
+        }
 
     def expected_primary_keys(self):
         """Return a dictionary with key of table name and value as a set of
