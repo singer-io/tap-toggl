@@ -12,6 +12,8 @@ import logging
 import sys
 from urllib.parse import urlencode, urlparse, parse_qs, urlunparse
 
+from tap_toggl.exceptions import TogglForbiddenError
+
 BASE_URL = "https://api.track.toggl.com/api"
 API_VERSION = "v9"
 
@@ -72,6 +74,10 @@ class Toggl(object):
   def _get(self, url, **kwargs):
     logger.info("Hitting {url}".format(url=url))
     response = requests.get(url, auth=HTTPBasicAuth(self.api_token, 'api_token'))
+    if response.status_code == 403:
+      raise TogglForbiddenError(
+          "HTTP-error-code: 403, Error: User does not have access to the resource at {}".format(url)
+      )
     response.raise_for_status()
     return response.json()
 

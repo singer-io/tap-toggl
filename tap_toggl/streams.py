@@ -13,6 +13,8 @@ from singer import utils
 from singer.metrics import Point
 from dateutil.parser import parse
 
+from tap_toggl.exceptions import TogglForbiddenError
+
 
 logger = singer.get_logger()
 KEY_PROPERTIES = ['id']
@@ -102,6 +104,25 @@ class Stream():
 
     def is_selected(self):
         return self.stream is not None
+
+
+    def check_access(self):
+        """
+        Verify that the API credentials have read access to this stream.
+        Returns True if accessible, False if a 403 Forbidden error is raised.
+        """
+        try:
+            get_data = getattr(self.client, self.name)
+            # Consume at most one record to verify access
+            for _ in get_data(self.replication_key, None):
+                break
+            return True
+        except TogglForbiddenError:
+            logger.warning(
+                "Stream '%s' does not have read permission, excluding from catalog.",
+                self.name,
+            )
+            return False
 
 
     # The main sync function.
