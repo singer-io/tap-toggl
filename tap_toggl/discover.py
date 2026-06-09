@@ -1,11 +1,12 @@
 
-# 
+#
 # Module dependencies.
-# 
+#
 
 import os
-import json
+
 import singer
+
 from tap_toggl.streams import STREAMS
 from tap_toggl.exceptions import TogglForbiddenError
 
@@ -56,7 +57,3 @@ def discover_streams(client):
     _apply_access_checks(client, streams)
 
     return streams
-
-
-
-

@@ -99,6 +99,3 @@ def main():
     elif parsed_args.catalog:
         state = parsed_args.state or {}
         do_sync(client, parsed_args.catalog, state)
-
-
-
