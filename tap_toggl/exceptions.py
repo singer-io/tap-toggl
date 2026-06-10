@@ -1,8 +1,14 @@
-class TogglForbiddenError(Exception):
-    """Raised when the API returns a 403 Forbidden response."""
-    pass
 class TogglError(Exception):
     """Base exception for all Toggl API errors."""
+
+    def __init__(self, message=None, response=None):
+        super().__init__(message)
+        self.message = message
+        self.response = response
+
+
+class TogglForbiddenError(TogglError):
+    """Raised when the API returns a 403 Forbidden response."""
 
     def __init__(self, message=None, response=None):
         super().__init__(message)
