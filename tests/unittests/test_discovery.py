@@ -22,14 +22,10 @@ class TestDiscoveryAccessChecks(unittest.TestCase):
 
         self.assertEqual(len(streams), original_count)
 
-    @patch.object(Stream, 'check_access')
-    def test_partial_access_excludes_forbidden_streams(self, mock_check):
+    def test_partial_access_excludes_forbidden_streams(self):
         """When some streams return 403, they should be excluded from the catalog."""
         forbidden_stream = 'tasks'
 
-        mock_check.side_effect = lambda: None  # reset
-
-        # Patch at instance level via the class
         with patch.object(Stream, 'check_access', new=lambda self_inner: self_inner.name != forbidden_stream):
             streams = [self._make_stream_entry(name) for name in STREAMS.keys()]
             _apply_access_checks(MagicMock(), streams)

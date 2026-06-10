@@ -34,7 +34,7 @@ def _apply_access_checks(client, streams):
             streams.remove(stream_entry)
 
     if inaccessible_streams:
-        if len(inaccessible_streams) == len(STREAMS):
+        if not streams:
             raise TogglForbiddenError(
                 "HTTP-error-code: 403, Error: The account credentials supplied do not have 'read' access to any "
                 "of the streams supported by the tap. Data collection cannot be initiated due to lack of permissions."
