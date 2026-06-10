@@ -120,7 +120,8 @@ class Toggl(object):
 
         if response.status_code == 403:
             raise TogglForbiddenError(
-                "HTTP-error-code: 403, Error: User does not have access to the resource at {}".format(url)
+                f"HTTP-error-code: 403, Error: User does not have access to the resource at {url}",
+                response=response,
             )
 
         if response.status_code == 429:

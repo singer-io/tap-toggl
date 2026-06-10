@@ -104,8 +104,14 @@ class Stream():
         """
         try:
             get_data = getattr(self.client, self.name)
+
+            # Use a recent bookmark so streams like `time_entries` don't build endpoints
+            # across the full configured start_date range during discovery.
+            from datetime import datetime, timezone
+            bookmark = utils.strftime(datetime.now(timezone.utc))
+
             # Consume at most one record to verify access
-            for _ in get_data(self.replication_key, None):
+            for _ in get_data(self.replication_key, bookmark):
                 break
             return True
         except TogglForbiddenError:
