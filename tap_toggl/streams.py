@@ -4,12 +4,13 @@
 
 import json
 import os
-
-from tap_toggl.exceptions import TogglForbiddenError
+from datetime import datetime, timezone
 
 import singer
 from dateutil.parser import parse
 from singer import metadata, utils
+
+from tap_toggl.exceptions import TogglForbiddenError
 
 logger = singer.get_logger()
 KEY_PROPERTIES = ['id']
@@ -107,7 +108,6 @@ class Stream():
 
             # Use a recent bookmark so streams like `time_entries` don't build endpoints
             # across the full configured start_date range during discovery.
-            from datetime import datetime, timezone
             bookmark = utils.strftime(datetime.now(timezone.utc))
 
             # Consume at most one record to verify access

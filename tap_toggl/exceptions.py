@@ -11,9 +11,7 @@ class TogglForbiddenError(TogglError):
     """Raised when the API returns a 403 Forbidden response."""
 
     def __init__(self, message=None, response=None):
-        super().__init__(message)
-        self.message = message
-        self.response = response
+        super().__init__(message, response)
 
 
 class TogglQuotaExceededError(TogglError):

@@ -11,7 +11,7 @@ from tap_toggl.streams import STREAMS
 from tap_toggl.exceptions import TogglForbiddenError
 
 
-logger = singer.get_logger()
+LOGGER = singer.get_logger()
 
 
 def get_abs_path(path):
@@ -39,7 +39,7 @@ def _apply_access_checks(client, streams):
                 "HTTP-error-code: 403, Error: The account credentials supplied do not have 'read' access to any "
                 "of the streams supported by the tap. Data collection cannot be initiated due to lack of permissions."
             )
-        logger.warning(
+        LOGGER.warning(
             "The account credentials supplied do not have 'read' access to the following stream(s): %s. "
             "These streams have been excluded from the catalog.",
             ", ".join(inaccessible_streams),
