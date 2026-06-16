@@ -12,7 +12,7 @@ from singer import metadata, utils
 
 from tap_toggl.exceptions import TogglForbiddenError
 
-logger = singer.get_logger()
+LOGGER = singer.get_logger()
 KEY_PROPERTIES = ['id']
 
 
@@ -114,10 +114,11 @@ class Stream():
             for _ in get_data(self.replication_key, bookmark):
                 break
             return True
-        except TogglForbiddenError:
-            logger.warning(
-                "Stream '%s' does not have read permission, excluding from catalog.",
-                self.name,
+        except TogglForbiddenError as exc:
+            LOGGER.warning(
+                "Stream '%s' does not have read permission, excluding from catalog. Detail: %s",
+                self.tap_stream_id,
+                str(exc),
             )
             return False
 

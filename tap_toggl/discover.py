@@ -33,15 +33,16 @@ def _apply_access_checks(client, streams):
             inaccessible_streams.append(stream_name)
             streams.remove(stream_entry)
 
-    if inaccessible_streams:
-        if not streams:
+    if not streams:
             raise TogglForbiddenError(
                 "HTTP-error-code: 403, Error: The account credentials supplied do not have 'read' access to any "
                 "of the streams supported by the tap. Data collection cannot be initiated due to lack of permissions."
             )
+    
+    if inaccessible_streams:
         LOGGER.warning(
-            "The account credentials supplied do not have 'read' access to the following stream(s): %s. "
-            "These streams have been excluded from the catalog.",
+            "These streams have been excluded from the catalog as the account credentials supplied "
+            "do not have 'read' access to the following stream(s): %s.",
             ", ".join(inaccessible_streams),
         )
 
