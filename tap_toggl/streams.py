@@ -117,7 +117,7 @@ class Stream():
         except TogglForbiddenError as exc:
             LOGGER.warning(
                 "Stream '%s' does not have read permission, excluding from catalog. Detail: %s",
-                self.tap_stream_id,
+                self.name,
                 str(exc),
             )
             return False
