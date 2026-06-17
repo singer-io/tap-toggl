@@ -116,7 +116,7 @@ class Stream():
             return True
         except TogglForbiddenError as exc:
             LOGGER.warning(
-                "Stream '%s' does not have read permission, excluding from catalog. Detail: %s",
+                "Unauthorized Stream: %s, excluding from catalog. HTTP-Error-Message:'%s'",
                 self.name,
                 str(exc),
             )
