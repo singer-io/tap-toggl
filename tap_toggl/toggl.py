@@ -12,6 +12,7 @@ from requests.auth import HTTPBasicAuth
 from singer import utils
 
 from tap_toggl.exceptions import (
+    TogglForbiddenError,
     TogglFeatureNotAvailableError,
     TogglQuotaExceededError,
     TogglQuotaWaitTooLongError,
@@ -116,6 +117,12 @@ class Toggl(object):
         kwargs.setdefault("timeout", REQUEST_TIMEOUT_SECONDS)
         logger.info("Request #%d: Hitting %s", Toggl.request_count, url)
         response = self.session.get(url, **kwargs)
+
+        if response.status_code == 403:
+            raise TogglForbiddenError(
+                f"HTTP-error-code: 403, Error: {response.text} for url: {url}",
+                response=response,
+            )
 
         if response.status_code == 429:
             logger.warning('Rate limited (429) after %d requests. Backing off.', Toggl.request_count)

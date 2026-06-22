@@ -4,12 +4,15 @@
 
 import json
 import os
+from datetime import datetime, timezone
 
 import singer
 from dateutil.parser import parse
 from singer import metadata, utils
 
-logger = singer.get_logger()
+from tap_toggl.exceptions import TogglForbiddenError
+
+LOGGER = singer.get_logger()
 KEY_PROPERTIES = ['id']
 
 
@@ -93,6 +96,32 @@ class Stream():
 
     def is_selected(self):
         return self.stream is not None
+
+
+    def check_access(self):
+        """
+        Verify that the API credentials have read access to this stream.
+        Returns True if accessible, False if a 403 Forbidden error is raised.
+        """
+        try:
+            get_data = getattr(self.client, self.name)
+
+            # Use a recent bookmark so streams like `time_entries` don't build endpoints
+            # across the full configured start_date range during discovery.
+            bookmark = utils.strftime(datetime.now(timezone.utc))
+
+            # Consume at most one record to verify access
+            for _ in get_data(self.replication_key, bookmark):
+                break
+            return True
+        except TogglForbiddenError as exc:
+            LOGGER.warning(
+                "Unauthorized Stream: %s, excluding from catalog. HTTP-Error-Message:'%s'",
+                self.name,
+                str(exc),
+            )
+            return False
+
 
     # The main sync function.
     def sync(self, state):

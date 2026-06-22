@@ -7,6 +7,13 @@ class TogglError(Exception):
         self.response = response
 
 
+class TogglForbiddenError(TogglError):
+    """Raised when the API returns a 403 Forbidden response."""
+
+    def __init__(self, message=None, response=None):
+        super().__init__(message, response)
+
+
 class TogglQuotaExceededError(TogglError):
     """402 with quota headers — sliding-window limit reached.
     Caller should wait for retry_after seconds; backoff honors this via backoff.runtime.

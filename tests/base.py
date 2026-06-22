@@ -11,6 +11,7 @@ class TogglBaseTest(BaseCase):
     """
 
     start_date = "2026-03-01T00:00:00Z"
+    IS_FORBIDDEN_STREAM = "is-forbidden-stream"
 
     @staticmethod
     def tap_name():
@@ -108,4 +109,12 @@ class TogglBaseTest(BaseCase):
                 cls.OBEYS_START_DATE: True,
                 cls.API_LIMIT: 1,
             },
+        }
+    
+    def expected_stream_names(self):
+        """The expected stream names, excluding forbidden streams."""
+        return {
+            stream_name
+            for stream_name, metadata in self.expected_metadata().items()
+            if not metadata.get(self.IS_FORBIDDEN_STREAM, False)
         }

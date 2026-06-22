@@ -8,10 +8,41 @@ import os
 import singer
 
 from tap_toggl.streams import STREAMS
+from tap_toggl.exceptions import TogglForbiddenError
+
+
+LOGGER = singer.get_logger()
 
 
 def get_abs_path(path):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
+
+
+def _apply_access_checks(client, streams):
+    """
+    Probe each stream for read access and remove inaccessible streams
+    from the list in place.
+    Raises TogglForbiddenError if no streams are accessible.
+    """
+    inaccessible_streams = []
+
+    for stream_entry in streams[:]:
+        stream_name = stream_entry['tap_stream_id']
+        stream_cls = STREAMS.get(stream_name)
+        if stream_cls and not stream_cls(client).check_access():
+            inaccessible_streams.append(stream_name)
+            streams.remove(stream_entry)
+
+    if not streams:
+            raise TogglForbiddenError(
+                "No streams are accessible. Ensure the credentials have read permission for at least one stream."
+            )
+    
+    if inaccessible_streams:
+        LOGGER.warning(
+            "These streams have been excluded due to HTTP-Error-Code:403 Forbidden: %s",
+            ", ".join(inaccessible_streams),
+        )
 
 
 def discover_streams(client):
@@ -21,4 +52,7 @@ def discover_streams(client):
         s = s(client)
         schema = singer.resolve_schema_references(s.load_schema())
         streams.append({'stream': s.name, 'tap_stream_id': s.name, 'schema': schema, 'metadata': s.load_metadata()})
+
+    _apply_access_checks(client, streams)
+
     return streams
