@@ -139,6 +139,33 @@ class TestTogglForbiddenError(unittest.TestCase):
             with self.assertRaises(TogglForbiddenError):
                 client._get('https://api.track.toggl.com/api/v9/workspaces/123/tasks')
 
+    def test_forbidden_error_contains_response_text_and_url(self):
+        """TogglForbiddenError message should include the API response body and the request URL."""
+        from tap_toggl.toggl import Toggl
+
+        error_body = "User does not have access"
+        url = 'https://api.track.toggl.com/api/v9/workspaces/123/tasks'
+
+        mock_response = MagicMock()
+        mock_response.status_code = 403
+        mock_response.text = error_body
+        mock_response.raise_for_status = MagicMock()
+
+        mock_session = MagicMock()
+        mock_session.get.return_value = mock_response
+
+        with patch.object(Toggl, '__init__', lambda self, **kwargs: None):
+            client = Toggl()
+            client.api_token = 'fake_token'
+            client.session = mock_session
+
+            with self.assertRaises(TogglForbiddenError) as ctx:
+                client._get(url)
+
+            self.assertIn('403', str(ctx.exception))
+            self.assertIn(error_body, str(ctx.exception))
+            self.assertIn(url, str(ctx.exception))
+
 
 class TestDiscoverStreams(unittest.TestCase):
     """Tests for discover_streams()."""
