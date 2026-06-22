@@ -22,8 +22,9 @@ class TestDiscoveryAccessChecks(unittest.TestCase):
 
         self.assertEqual(len(streams), original_count)
 
-    def test_partial_access_excludes_forbidden_streams(self):
-        """When some streams return 403, they should be excluded from the catalog."""
+    @patch('tap_toggl.discover.LOGGER')
+    def test_partial_access_excludes_forbidden_streams(self, mock_logger):
+        """When some streams return 403, they should be excluded and warning logged."""
         forbidden_stream = 'tasks'
 
         with patch.object(Stream, 'check_access', new=lambda self_inner: self_inner.name != forbidden_stream):
@@ -34,13 +35,21 @@ class TestDiscoveryAccessChecks(unittest.TestCase):
             self.assertNotIn(forbidden_stream, stream_names)
             self.assertIn('workspaces', stream_names)
 
+            # Verify warning message mentions the excluded stream
+            mock_logger.warning.assert_called_once()
+            warning_msg = mock_logger.warning.call_args[0][0] % mock_logger.warning.call_args[0][1:]
+            self.assertIn(forbidden_stream, warning_msg)
+            self.assertIn('403', warning_msg)
+
     @patch.object(Stream, 'check_access', return_value=False)
     def test_no_streams_accessible_raises_error(self, mock_check):
-        """When all streams return 403, a TogglForbiddenError should be raised."""
+        """When all streams return 403, a TogglForbiddenError should be raised with correct message."""
         streams = [self._make_stream_entry(name) for name in STREAMS.keys()]
 
-        with self.assertRaises(TogglForbiddenError):
+        with self.assertRaises(TogglForbiddenError) as ctx:
             _apply_access_checks(MagicMock(), streams)
+
+        self.assertIn('No streams are accessible', str(ctx.exception))
 
     @patch.object(Stream, 'check_access', return_value=True)
     @patch.object(Stream, 'load_schema', return_value={'properties': {'id': {'type': 'integer'}}})
@@ -79,6 +88,23 @@ class TestStreamCheckAccess(unittest.TestCase):
         from tap_toggl.streams import Tasks
         stream = Tasks(client=client)
         self.assertFalse(stream.check_access())
+
+    @patch('tap_toggl.streams.LOGGER')
+    def test_check_access_logs_warning_on_forbidden(self, mock_logger):
+        """check_access logs a warning with stream name and error message on 403."""
+        client = MagicMock()
+        error_message = "403 Forbidden"
+        client.tasks = MagicMock(side_effect=TogglForbiddenError(error_message))
+
+        from tap_toggl.streams import Tasks
+        stream = Tasks(client=client)
+        stream.check_access()
+
+        mock_logger.warning.assert_called_once()
+        warning_msg = mock_logger.warning.call_args[0][0] % mock_logger.warning.call_args[0][1:]
+        self.assertIn('tasks', warning_msg)
+        self.assertIn(error_message, warning_msg)
+        self.assertIn('Unauthorized Stream', warning_msg)
 
     def test_check_access_returns_true_on_empty_response(self):
         """check_access returns True even when the stream returns no data (empty but authorized)."""
