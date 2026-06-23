@@ -68,7 +68,7 @@ class Stream():
             return True
         if value is None:
             return False
-        return utils.strptime_with_tz(value) > utils.strptime_with_tz(current_bookmark)
+        return utils.strptime_with_tz(value) >= utils.strptime_with_tz(current_bookmark)
 
     def load_schema(self):
         schema_file = "schemas/{}.json".format(self.name)
