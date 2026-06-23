@@ -44,7 +44,7 @@ class Stream():
     def is_session_bookmark_old(self, value):
         if self.session_bookmark is None:
             return True
-        return utils.strptime_with_tz(value) >= utils.strptime_with_tz(self.session_bookmark)
+        return utils.strptime_with_tz(value) > utils.strptime_with_tz(self.session_bookmark)
 
     def update_session_bookmark_if_old(self, value):
         if self.is_session_bookmark_old(value):
@@ -68,7 +68,7 @@ class Stream():
             return True
         if value is None:
             return False
-        return utils.strptime_with_tz(value) > utils.strptime_with_tz(current_bookmark)
+        return utils.strptime_with_tz(value) >= utils.strptime_with_tz(current_bookmark)
 
     def load_schema(self):
         schema_file = "schemas/{}.json".format(self.name)
