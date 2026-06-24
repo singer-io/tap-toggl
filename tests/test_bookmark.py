@@ -31,3 +31,32 @@ class TogglBookmarkTest(BookmarkTest, TogglBaseTest):
             "workspace_users",
         }
         return self.expected_stream_names().difference(streams_to_exclude)
+
+    def test_first_vs_second_records(self):
+        for stream in self.test_streams:
+            with self.subTest(stream=stream):
+                replication_method = self.expected_replication_methods.get(stream,{})
+
+                if replication_method == self.INCREMENTAL:
+
+                    # gather results
+                    sync_1_records = [
+                        record['data'] for record in
+                        self.synced_records_1.get(stream, {}).get('messages', [])
+                        if record.get('action') == 'upsert']
+
+                    # remove records for sync2 that were inserted after sync 1
+                    expected_replication_key = self.expected_replication_keys(stream)
+                    # Make sure this is not a compound replication key
+                    assert len(expected_replication_key) == 1
+                    expected_replication_key = next(iter(expected_replication_key))
+
+                    sync_2_records = [
+                        record['data'] for record in
+                        self.synced_records_2.get(stream, {}).get('messages', [])
+                        if record.get('action') == 'upsert'
+                        and self.parse_date(record['data'][expected_replication_key])
+                        <= self.parse_date(self.bookmark_values_1.get(stream,{}))]
+
+                    # Verify the number of records in the 2nd sync is less then the first
+                    self.assertLessEqual(len(sync_2_records), len(sync_1_records))
